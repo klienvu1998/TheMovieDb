@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/show"
+        motion:constraintSetStart="@id/hide"
+        motion:duration="500">
+       <KeyFrameSet>
+       </KeyFrameSet>
+    </Transition>
+
+    <Transition
+        motion:constraintSetEnd="@id/card"
+        motion:constraintSetStart="@id/show"
+        motion:duration="500"
+        motion:autoTransition="none">
+        <OnSwipe
+            motion:touchRegionId="@+id/youtube_view_container"
+            motion:dragDirection="dragDown"
+            motion:touchAnchorSide="bottom" />
+        <KeyFrameSet >
+            <KeyAttribute
+                motion:motionTarget="@+id/tv_title"
+                motion:framePosition="99"
+                android:alpha="0" />
+            <KeyAttribute
+                motion:motionTarget="@+id/btn_close"
+                motion:framePosition="99"
+                android:alpha="0" />
+        </KeyFrameSet>
+    </Transition>
+
+    <Transition
+        motion:constraintSetEnd="@+id/ytb_fullscreen"
+        motion:constraintSetStart="@+id/show"
+        motion:duration="100">
+    </Transition>
+
+    <ConstraintSet android:id="@+id/ytb_fullscreen">
+        <Constraint
+            android:id="@+id/youtube_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <Constraint
+            android:id="@+id/youtube_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@+id/youtube_view_container" />
+
+        <Constraint
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toBottomOf="parent"/>
+
+        <Constraint
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            motion:layout_constraintTop_toBottomOf="parent"/>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/hide">
+        <Constraint
+            android:id="@+id/view_pager_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toTopOf="@id/tab_layout"
+            motion:layout_constraintTop_toBottomOf="@id/tool_bar"/>
+        <Constraint
+            android:id="@+id/youtube_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            motion:layout_constraintTop_toTopOf="@id/tab_layout"/>
+        <Constraint
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:paddingHorizontal="10dp"
+            motion:layout_constraintStart_toStartOf="@id/youtube_view_container"
+            motion:layout_constraintEnd_toStartOf="@id/btn_close"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"/>
+        <Constraint
+            android:id="@+id/btn_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:alpha="0"
+            motion:layout_constraintEnd_toEndOf="@id/youtube_view_container"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@id/youtube_view_container"
+            android:layout_marginEnd="10dp"/>
+        <Constraint
+            android:id="@+id/youtube_view"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            motion:layout_constraintStart_toStartOf="@id/youtube_view_container"
+            motion:layout_constraintEnd_toEndOf="@id/youtube_view_container"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"/>
+        <Constraint
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/tv_title"/>
+        <Constraint
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            motion:layout_constraintBottom_toBottomOf="parent"/>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/show">
+        <Constraint
+            android:id="@+id/view_pager_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toTopOf="@id/tab_layout"
+            motion:layout_constraintTop_toBottomOf="@id/tool_bar"/>
+        <Constraint
+            android:id="@+id/youtube_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/youtube_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@+id/youtube_view_container" />
+        <Constraint
+            android:id="@+id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toBottomOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="parent"/>
+        <Constraint
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0"
+            motion:layout_constraintStart_toStartOf="@+id/youtube_view_container"
+            motion:layout_constraintTop_toTopOf="@+id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@id/youtube_view_container"
+            motion:layout_constraintEnd_toEndOf="@id/youtube_view_container"/>
+        <Constraint
+            android:id="@+id/btn_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:alpha="0"
+            android:layout_marginEnd="10dp"
+            motion:layout_constraintEnd_toEndOf="@id/youtube_view_container"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@id/youtube_view_container" />
+        <Constraint
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            motion:layout_constraintTop_toBottomOf="parent"/>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/card">
+        <Constraint
+            android:id="@id/youtube_view_container"
+            android:layout_height="80dp"
+            android:layout_width="match_parent"
+            motion:layout_constraintBottom_toTopOf="@+id/tab_layout" />
+        <Constraint
+            android:id="@+id/youtube_view"
+            android:layout_width="140dp"
+            android:layout_height="0dp"
+            motion:layout_constraintStart_toStartOf="@id/youtube_view_container"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@id/youtube_view_container"/>
+        <Constraint
+            android:id="@+id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            motion:layout_constraintStart_toEndOf="@+id/youtube_view"
+            motion:layout_constraintEnd_toStartOf="@id/btn_close"
+            motion:layout_constraintTop_toTopOf="@+id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@id/youtube_view_container" />
+        <Constraint
+            android:id="@+id/btn_close"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:alpha="1"
+            android:layout_marginEnd="10dp"
+            motion:layout_constraintEnd_toEndOf="@id/youtube_view_container"
+            motion:layout_constraintTop_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintBottom_toBottomOf="@id/youtube_view_container" />
+
+        <Constraint
+            android:id="@id/detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintTop_toBottomOf="@id/youtube_view_container" />
+        <Constraint
+            android:id="@+id/view_pager_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            motion:layout_constraintBottom_toTopOf="@id/youtube_view_container"
+            motion:layout_constraintTop_toBottomOf="@id/tool_bar">
+        </Constraint>
+        <Constraint
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            motion:layout_constraintBottom_toBottomOf="parent"/>
+    </ConstraintSet>
+</MotionScene>

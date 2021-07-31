@@ -10,7 +10,9 @@ import java.util.concurrent.TimeUnit
 
 const val API_KEY = "cf8254960d5832ecaae26e13929bb3b5"
 const val BASE_URL = "https://api.themoviedb.org/3/"
-const val BASE_IMG_URL = "https://image.tmdb.org/t/p/w342"
+const val BASE_IMG_LOW_QUALITY_URL = "https://image.tmdb.org/t/p/w300"
+const val BASE_IMG_MEDIUM_QUALITY_URL = "https://image.tmdb.org/t/p/w780"
+const val BASE_IMG_HIGH_QUALITY_URL = "https://image.tmdb.org/t/p/w1280"
 
 object TheMovieDbClient {
 

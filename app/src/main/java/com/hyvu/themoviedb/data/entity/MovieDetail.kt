@@ -3,11 +3,11 @@ package com.hyvu.themoviedb.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieOverview(
+data class MovieDetail(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     @SerializedName("genre_ids")
     val genreIds: List<Int>,
     @SerializedName("id")
@@ -21,7 +21,7 @@ data class MovieOverview(
     @SerializedName("popularity")
     val popularity: Double,
     @SerializedName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerializedName("release_date")
     val releaseDate: String,
     @SerializedName("title")
@@ -32,4 +32,12 @@ data class MovieOverview(
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int
-)
+) {
+    fun getBackdropImage(): String? {
+        return if (this.backdropPath.isNullOrEmpty()) {
+            if (this.posterPath.isNullOrEmpty()) {
+                this.posterPath
+            } else null
+        } else this.backdropPath
+    }
+}

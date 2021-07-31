@@ -3,11 +3,11 @@ package com.hyvu.themoviedb.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieDetails(
+data class MovieFullDetails(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     @SerializedName("belongs_to_collection")
     val belongsToCollection: BelongsToCollection,
     @SerializedName("budget")
@@ -29,7 +29,7 @@ data class MovieDetails(
     @SerializedName("popularity")
     val popularity: Double,
     @SerializedName("poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @SerializedName("production_companies")
     val productionCompanies: List<ProductionCompany>,
     @SerializedName("production_countries")

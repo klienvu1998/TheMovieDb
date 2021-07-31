@@ -17,17 +17,8 @@ import com.hyvu.themoviedb.viewmodel.factory.DetailViewModelFactory
 class DetailFragment : Fragment() {
 
     private lateinit var mBinding: FragmentDetailBinding
-    private var listener: Listener? = null
     private val mViewModel by lazy {
         ViewModelProvider(this, DetailViewModelFactory()).get(DetailViewModel::class.java)
-    }
-
-    interface Listener {
-        fun onVideoClicked(movieVideoDetail: MovieVideoDetail)
-    }
-
-    fun setListener(listener: Listener) {
-        this.listener = listener
     }
 
     override fun onCreateView(
@@ -50,7 +41,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun liveData() {
-        mViewModel.movieDetails.observe(viewLifecycleOwner, { movieDetails ->
+        mViewModel.movieFullDetails.observe(viewLifecycleOwner, { movieDetails ->
             mBinding.tvContent.text = movieDetails.overview
             var companiesName = if (movieDetails.productionCompanies.isNotEmpty()) "" else "N/A"
             movieDetails.productionCompanies.forEachIndexed { index, productionCompany ->
@@ -69,11 +60,7 @@ class DetailFragment : Fragment() {
 
     private val listenerMovieVideosAdapter = object : MovieVideosAdapter.Listener {
         override fun onItemClicked(videoDetail: MovieVideoDetail) {
-            listener?.onVideoClicked(videoDetail)
+            (activity as MainActivity).loadYtbVideo(videoDetail.key)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

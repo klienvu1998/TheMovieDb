@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingEnd="5dp"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_genre"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:paddingHorizontal="5dp"
+        android:textColor="@android:color/holo_red_light"
+        android:background="@drawable/border_circle_red"
+        tools:text="Adventure"/>
+
+</LinearLayout>

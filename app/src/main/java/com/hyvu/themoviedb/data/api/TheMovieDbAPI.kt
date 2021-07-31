@@ -10,26 +10,37 @@ import retrofit2.http.Query
 interface TheMovieDbAPI {
 
     @GET("movie/popular")
-    fun getPopularMovie(): Observable<MoviesByGenre>
+    fun getPopularMovie(
+            @Query("page") page: Int)
+    : Single<MoviesByGenre>
 
     @GET("genre/movie/list")
     fun getListGenres(): Observable<Genres>
 
     @GET("discover/movie")
-    fun getListMovieOverview(
-        @Query("with_genres") genes: Int
-    ): Observable<MoviesByGenre>
+    fun getMoviesByGenre(
+        @Query("with_genres") genes: Int,
+        @Query("page") page: Int,
+    ): Single<MoviesByGenre>
 
     @GET("movie/{movie_id}")
     fun getMovieDetails(
         @Path("movie_id")  movieId: Int
-    ): Observable<MovieDetails>
+    ): Observable<MovieFullDetails>
 
     @GET("movie/{movie_id}/videos")
     fun getMovieVideos(
         @Path("movie_id") movieId: Int
-    ): Observable<MovieVideo>
+    ): Observable<MovieVideos>
 
     @GET("trending/movie/day")
     fun getTrendingMovies(): Single<TrendingMovies>
+
+    @GET("movie/latest")
+    fun getLatestMovie(): Single<MovieDetail>
+
+    @GET("movie/{movie_id}/credits")
+    fun getCredits(
+        @Path("movie_id") movieId: Int
+    ): Single<Credits>
 }

@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/white"
     app:layoutDescription="@xml/activity_main_scene"
-    tools:context=".MainActivity">
+    tools:context=".view.MainActivity">
 
     <LinearLayout
         android:id="@+id/tool_bar"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/tab_layout"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar"/>
+        app:layout_constraintTop_toBottomOf="@id/tool_bar" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/youtube_view_container"

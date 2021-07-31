@@ -2,8 +2,16 @@ package com.hyvu.themoviedb.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.rxjava2.flowable
+import com.hyvu.themoviedb.data.repository.datasource.MoviePagingSource
 import com.hyvu.themoviedb.data.api.TheMovieDbClient
 import com.hyvu.themoviedb.data.entity.*
+import com.hyvu.themoviedb.data.repository.datasource.PopularMoviePagingSource
+import com.hyvu.themoviedb.utils.Constraints
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -12,20 +20,42 @@ import io.reactivex.schedulers.Schedulers
 object MovieRepository {
     private val compositeDisposable = CompositeDisposable()
 
-    private val _responseMovieVideos = MutableLiveData<MovieVideo>()
-    val responseMovieVideos: LiveData<MovieVideo> = _responseMovieVideos
+    private val _responseMovieVideos = MutableLiveData<MovieVideos>()
+    val responseMovieVideos: LiveData<MovieVideos> = _responseMovieVideos
 
-    private val _responseCurrentMovieDetail = MutableLiveData<MovieDetails>()
-    val responseCurrentMovieDetail: LiveData<MovieDetails> = _responseCurrentMovieDetail
+    private val _responseCurrentMovieDetail = MutableLiveData<MovieFullDetails>()
+    val responseCurrentMovieDetail: LiveData<MovieFullDetails> = _responseCurrentMovieDetail
+
+    private val _responseCurrentMovieDetailForTikMovie = MutableLiveData<TikMovie>()
+    val responseCurrentMovieDetailForTikMovie: LiveData<TikMovie> = _responseCurrentMovieDetailForTikMovie
 
     private val _responseListMovieGenre: MutableLiveData<Genres> = MutableLiveData()
     val responseListMovieGenre: LiveData<Genres> = _responseListMovieGenre
 
-    private val _responseMovieByGenre: MutableLiveData<Map<Genre, MoviesByGenre>> = MutableLiveData()
-    val responseMovieByGenre: LiveData<Map<Genre, MoviesByGenre>> = _responseMovieByGenre
+    private val _responseMovieByGenre: MutableLiveData<Map<Genre, List<MovieDetail>>> = MutableLiveData()
+    val responseMovieByGenre: LiveData<Map<Genre, List<MovieDetail>>> = _responseMovieByGenre
 
     private val _responseTrendingMovies: MutableLiveData<TrendingMovies> = MutableLiveData()
     val responseTrendingMovies: LiveData<TrendingMovies> = _responseTrendingMovies
+
+    private val _responseLatestMovieDetail: MutableLiveData<MovieDetail> = MutableLiveData()
+    val responseLatestMovieDetail: LiveData<MovieDetail> = _responseLatestMovieDetail
+
+    private val _responseMovieCredits: MutableLiveData<Credits> = MutableLiveData()
+    val responseMovieCredits: LiveData<Credits> = _responseMovieCredits
+
+    fun fetchMovieCredits(movieId: Int) {
+        compositeDisposable.add(
+            TheMovieDbClient.getClient().getCredits(movieId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _responseMovieCredits.postValue(it)
+                }, { e ->
+                    e.printStackTrace()
+                })
+        )
+    }
 
     fun fetchTrendingMovie() {
         compositeDisposable.add(
@@ -59,9 +89,9 @@ object MovieRepository {
         )
     }
 
-    fun fetchListMovieByGenres() {
+    fun fetchHomeListMovieByGenres() {
         var i = 0
-        val map = LinkedHashMap<Genre, MoviesByGenre>()
+        val map = LinkedHashMap<Genre, List<MovieDetail>>()
         compositeDisposable.add(
                 TheMovieDbClient.getClient().getListGenres()
                         .subscribeOn(Schedulers.io())
@@ -70,14 +100,13 @@ object MovieRepository {
                             _responseListMovieGenre.postValue(data)
                             Observable.just(data.genres)
                                     .concatMap { genres -> Observable.fromIterable(genres) }
-                                    .concatMap { genre ->
-                                        Observable.just(genre)
-                                        TheMovieDbClient.getClient().getListMovieOverview(genre.id)
+                                    .concatMapSingle { genre ->
+                                        genre.id?.let { TheMovieDbClient.getClient().getMoviesByGenre(it, 1) }
                                     }
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe({ movies ->
-                                        map[data.genres[i++]] = movies
+                                        map[data.genres[i++]] = movies.movieDetails
                                         _responseMovieByGenre.postValue(map)
                                     }, { e ->
                                         e.printStackTrace()
@@ -88,7 +117,28 @@ object MovieRepository {
                             e.printStackTrace()
                         })
         )
+    }
 
+    fun fetchMovieByGenrePerPage(genreId: Int): Flowable<PagingData<MovieDetail>> {
+        return Pager(
+            config = PagingConfig(
+                maxSize = Constraints.MAX_ITEM_PER_SCROLL,
+                pageSize = Constraints.NETWORK_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { MoviePagingSource(TheMovieDbClient.getClient(), genreId) }
+        ).flowable
+    }
+
+    fun fetchPopularMovies(): Flowable<PagingData<MovieDetail>> {
+        return Pager(
+                config = PagingConfig(
+                        maxSize =  Constraints.MAX_ITEM_PER_SCROLL,
+                        pageSize = Constraints.NETWORK_PAGE_SIZE,
+                        enablePlaceholders = false
+                ),
+                pagingSourceFactory = { PopularMoviePagingSource(TheMovieDbClient.getClient()) }
+        ).flowable
     }
 
     fun fetchMovieVideos(movieId: Int) {
@@ -103,6 +153,20 @@ object MovieRepository {
                         })
         )
     }
+
+    fun fetchLatestMovie() {
+        compositeDisposable.add(
+                TheMovieDbClient.getClient().getLatestMovie()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            _responseLatestMovieDetail.postValue(it)
+                        }, { e ->
+                            e.printStackTrace()
+                        })
+        )
+    }
+
 
     fun deinit() {
         compositeDisposable.clear()

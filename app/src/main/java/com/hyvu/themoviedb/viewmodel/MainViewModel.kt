@@ -2,15 +2,16 @@ package com.hyvu.themoviedb.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.hyvu.themoviedb.data.entity.MovieDetails
-import com.hyvu.themoviedb.data.entity.MovieVideo
+import com.hyvu.themoviedb.data.entity.Cast
+import com.hyvu.themoviedb.data.entity.Credits
+import com.hyvu.themoviedb.data.entity.MovieFullDetails
+import com.hyvu.themoviedb.data.entity.MovieVideos
 import com.hyvu.themoviedb.data.repository.MovieRepository
 
 class MainViewModel(): ViewModel() {
 
-    val movieVideos: LiveData<MovieVideo> = MovieRepository.responseMovieVideos
-
-    val movieDetails: LiveData<MovieDetails> = MovieRepository.responseCurrentMovieDetail
+    val movieVideos: LiveData<MovieVideos> = MovieRepository.responseMovieVideos
+    val movieFullDetails: LiveData<MovieFullDetails> = MovieRepository.responseCurrentMovieDetail
 
     fun fetchMovieDetails(movieId: Int) {
         MovieRepository.fetchMovieDetails(movieId)

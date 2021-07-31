@@ -1,4 +1,4 @@
-package com.hyvu.themoviedb
+package com.hyvu.themoviedb.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,36 +9,33 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayoutMediator
+import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.GenresAdapter
-import com.hyvu.themoviedb.adapter.ViewPagerAdapter
-import com.hyvu.themoviedb.data.api.BASE_IMG_URL
-import com.hyvu.themoviedb.data.entity.MovieDetails
-import com.hyvu.themoviedb.data.entity.MovieVideoDetail
+import com.hyvu.themoviedb.adapter.ViewPagerMainAdapter
+import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
+import com.hyvu.themoviedb.data.entity.MovieFullDetails
 import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
-import com.hyvu.themoviedb.view.DetailFragment
-import com.hyvu.themoviedb.view.HomeFragment
-import com.hyvu.themoviedb.view.SearchFragment
-import com.hyvu.themoviedb.view.UserFragment
+import com.hyvu.themoviedb.utils.Utils
+import com.hyvu.themoviedb.view.*
 import com.hyvu.themoviedb.viewmodel.MainViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
-import rx.internal.util.UtilityFunctions
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val mViewModel by lazy {
+    val mViewModel by lazy {
         ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java)
     }
     private lateinit var mBinding: ActivityMainBinding
-    private lateinit var viewPagerMainAdapter: ViewPagerAdapter
-    private lateinit var viewPagerDetailAdapter: ViewPagerAdapter
+    private lateinit var viewPagerMainMainAdapter: ViewPagerMainAdapter
+    private lateinit var viewPagerDetailMainAdapter: ViewPagerMainAdapter
     private var ytbPlayer: YouTubePlayer? = null
+    private var movieId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun liveData() {
-        mViewModel.movieDetails.observe(this, { movieDetails ->
+        mViewModel.movieFullDetails.observe(this, { movieDetails ->
             setupLayoutForDetailScreen(movieDetails)
             initTabLayoutDetail()
         })
@@ -70,15 +67,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initTabLayoutDetail() {
-        viewPagerDetailAdapter = ViewPagerAdapter(this, listenerViewDetailPagerAdapter)
-        mBinding.detailContainer.viewPagerDetail.adapter = viewPagerDetailAdapter
+        viewPagerDetailMainAdapter = ViewPagerMainAdapter(this, listenerViewDetailPagerAdapter)
+        mBinding.detailContainer.viewPagerDetail.adapter = viewPagerDetailMainAdapter
         TabLayoutMediator(mBinding.detailContainer.tabLayoutDetail, mBinding.detailContainer.viewPagerDetail) { tab, position ->
             when (position) {
                 0 -> {
                     tab.text = "Details"
                 }
                 1 -> {
-                    tab.text = "Production"
+                    tab.text = "Cast"
                 }
                 2 -> {
                     tab.text = "Comment"
@@ -88,15 +85,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initTabLayoutMain() {
-        viewPagerMainAdapter = ViewPagerAdapter(this, listenerViewMainPagerAdapter)
-        mBinding.viewPagerContainer.adapter = viewPagerMainAdapter
+        viewPagerMainMainAdapter = ViewPagerMainAdapter(this, listenerViewMainPagerAdapter)
+        mBinding.viewPagerContainer.adapter = viewPagerMainMainAdapter
         TabLayoutMediator(mBinding.tabLayout, mBinding.viewPagerContainer) { tab, position ->
             when (position) {
                 0 -> {
                     tab.text = "Home"
                 }
                 1 -> {
-                    tab.text = "Search"
+                    tab.text = "TikMovie"
                 }
                 2 -> {
                     tab.text = "User"
@@ -126,6 +123,7 @@ class MainActivity : AppCompatActivity() {
                         isShowControllerYoutube(true)
                     }
                     R.id.hide -> {
+                        ytbPlayer?.pause()
                         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
                         mBinding.detailContainer.progressBarLoadingDetail.visibility = View.VISIBLE
                     }
@@ -149,7 +147,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     private fun initYoutube() {
         lifecycle.addObserver(mBinding.youtubeView)
-//        mBinding.youtubeView.inflateCustomPlayerUi(R.layout.youtube_custom_layout)
         mBinding.youtubeView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 super.onReady(youTubePlayer)
@@ -175,16 +172,15 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private val listenerViewMainPagerAdapter = object : ViewPagerAdapter.Listener {
+    private val listenerViewMainPagerAdapter = object : ViewPagerMainAdapter.Listener {
         override fun onCreateFragment(position: Int): Fragment {
             var fragment: Fragment = HomeFragment()
             when (position) {
                 0 -> {
                     fragment = HomeFragment()
-                    fragment.setListener(listenerHomeFragment)
                 }
                 1 -> {
-                    fragment = SearchFragment()
+                    fragment = TikMovieFragment()
                 }
                 2 -> {
                     fragment = UserFragment()
@@ -194,58 +190,52 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val listenerViewDetailPagerAdapter = object : ViewPagerAdapter.Listener {
+    fun showMovieDetails(movieId: Int) {
+        mBinding.detailContainer.progressBarLoadingDetail.visibility = View.VISIBLE
+        this.movieId = movieId
+        mViewModel.fetchMovieDetails(movieId)
+        mBinding.motionLayout.transitionToState(R.id.show)
+    }
+
+    private val listenerViewDetailPagerAdapter = object : ViewPagerMainAdapter.Listener {
         override fun onCreateFragment(position: Int): Fragment {
             var fragment: Fragment = DetailFragment()
             when (position) {
                 0 -> {
                     fragment = DetailFragment()
-                    fragment.setListener(listenerMovieDetailFragment)
                 }
                 1 -> {
-                    fragment
+                    fragment = CastFragment.newInstance(movieId)
                 }
                 2 -> {
-                    fragment
+                    fragment = UserFragment()
                 }
             }
             return fragment
         }
     }
 
-    private val listenerMovieDetailFragment = object : DetailFragment.Listener {
-        override fun onVideoClicked(movieVideoDetail: MovieVideoDetail) {
-            ytbPlayer?.loadVideo(movieVideoDetail.key, 0f)
-        }
+    fun loadYtbVideo(key: String) {
+        ytbPlayer?.loadVideo(key, 0f)
     }
 
-    private val listenerHomeFragment = object : HomeFragment.Listener {
-        override fun showMovieDetails(movieId: Int) {
-            mViewModel.fetchMovieDetails(movieId)
-            mBinding.motionLayout.transitionToState(R.id.show)
-        }
-    }
-
-    private fun setupLayoutForDetailScreen(movieDetails: MovieDetails) {
+    private fun setupLayoutForDetailScreen(movieFullDetails: MovieFullDetails) {
         mBinding.detailContainer.progressBarLoadingDetail.visibility = View.GONE
-        mBinding.tvTitle.text = movieDetails.title
-        mBinding.detailContainer.apply {
-            tvTitle.text = movieDetails.title
+        mBinding.tvTitle.text = movieFullDetails.title
+        mBinding.detailContainer.posterContainer.apply {
+            tvTitle.text = movieFullDetails.title
             tvTitle.isSelected = true
             ratingBar.max = 10
-            ratingBar.rating = ((movieDetails.voteAverage * 5) / 10).toFloat()
-            tvVoteCount.text = movieDetails.voteCount.toString()
-            tvReleaseDate.text = movieDetails.releaseDate
-            tvSpokenLanguage.text = movieDetails.spokenLanguages[0].iso6391.toUpperCase()
-            Glide.with(this@MainActivity)
-                .load(BASE_IMG_URL + movieDetails.posterPath)
-                .centerCrop()
-                .into(imgPoster)
+            ratingBar.rating = ((movieFullDetails.voteAverage * 5) / 10).toFloat()
+            tvVoteCount.text = movieFullDetails.voteCount.toString()
+            tvReleaseDate.text = movieFullDetails.releaseDate
+            Utils.loadGlideImage(this@MainActivity, BASE_IMG_LOW_QUALITY_URL, movieFullDetails.posterPath, imgPoster)
+            rcvGenres.apply {
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = GenresAdapter(context, movieFullDetails.genres)
+            }
         }
-        mBinding.detailContainer.rcvGenres.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = GenresAdapter(context, movieDetails.genres)
-        }
+        if (!movieFullDetails.spokenLanguages.isNullOrEmpty()) mBinding.detailContainer.tvSpokenLanguage.text = movieFullDetails.spokenLanguages[0].iso6391.toUpperCase()
     }
 
     override fun onStop() {

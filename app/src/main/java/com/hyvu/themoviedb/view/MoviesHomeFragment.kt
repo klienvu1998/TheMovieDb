@@ -97,10 +97,6 @@ class MoviesHomeFragment : Fragment() {
             listener?.onClickedSeeAll(genre)
         }
 
-        override fun onClickedMovie(movieId: Int) {
-            (activity as MainActivity).showMovieDetails(movieId)
-        }
-
         override fun onClickedTrending() {
             listener?.onClickTrending()
         }

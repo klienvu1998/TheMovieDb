@@ -5,21 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.MovieVideosAdapter
 import com.hyvu.themoviedb.data.entity.MovieVideoDetail
 import com.hyvu.themoviedb.databinding.FragmentDetailBinding
-import com.hyvu.themoviedb.viewmodel.DetailViewModel
-import com.hyvu.themoviedb.viewmodel.factory.DetailViewModelFactory
+import com.hyvu.themoviedb.viewmodel.MovieInfoViewModel
+import com.hyvu.themoviedb.viewmodel.factory.MovieInfoViewModelFactory
 
 class DetailFragment : Fragment() {
 
     private lateinit var mBinding: FragmentDetailBinding
-    private val mViewModel by lazy {
-        ViewModelProvider(this, DetailViewModelFactory()).get(DetailViewModel::class.java)
-    }
+    private val mViewModel by viewModels<MovieInfoViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

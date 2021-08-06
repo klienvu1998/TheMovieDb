@@ -58,8 +58,6 @@ class TikMovieFragment : Fragment() {
     }
 
     private val listenerTikMovieViewPagerAdapter = object : TikMoviePagingViewPagerAdapter.Listener {
-        override fun showMovieDetails(movieId: Int) {
-            (context as MainActivity).showMovieDetails(movieId)
-        }
+
     }
 }

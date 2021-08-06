@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.MoviesPagingDataAdapter
 import com.hyvu.themoviedb.data.entity.Genre
+import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.FragmentMoviesByGenreBinding
 import com.hyvu.themoviedb.viewmodel.HomeViewModel
 
@@ -80,9 +81,6 @@ class MoviesByGenreFragment : Fragment() {
     }
 
     private val listenerMoviesPagingDataAdapter = object : MoviesPagingDataAdapter.Listener {
-        override fun showMovieDetails(movieId: Int) {
-            (activity as MainActivity).showMovieDetails(movieId)
-        }
 
     }
 

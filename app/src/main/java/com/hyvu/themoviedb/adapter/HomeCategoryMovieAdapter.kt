@@ -13,7 +13,6 @@ import com.hyvu.themoviedb.databinding.ItemBannerBinding
 import com.hyvu.themoviedb.databinding.ItemCategoryBinding
 import com.hyvu.themoviedb.view.MainActivity
 import java.util.*
-import kotlin.collections.LinkedHashMap
 
 class HomeCategoryMovieAdapter(
     private val context: Context?,
@@ -28,7 +27,6 @@ class HomeCategoryMovieAdapter(
 
     interface Listener {
         fun onClickedSeeAll(genre: Genre)
-        fun onClickedMovie(movieId: Int)
         fun onClickedTrending()
     }
 
@@ -63,9 +61,6 @@ class HomeCategoryMovieAdapter(
     }
 
     private val childListener = object : HomeCategoryMovieChildAdapter.Listener {
-        override fun onClickedMovie(movieId: Int) {
-            listener.onClickedMovie(movieId)
-        }
 
     }
 
@@ -109,8 +104,5 @@ class HomeCategoryMovieAdapter(
     }
 
     private val listenerViewPagerSliderAdapter = object : ViewPagerSliderAdapter.Listener {
-        override fun onTrendingMovieClicked(movieId: Int) {
-            (context as MainActivity).showMovieDetails(movieId)
-        }
     }
 }

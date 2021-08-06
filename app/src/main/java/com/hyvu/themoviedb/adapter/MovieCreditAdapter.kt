@@ -27,7 +27,7 @@ class MovieCreditAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val cast = credit.cast?.get(position)
-        Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, cast?.profilePath, holder.mBinding.imgCast)
+        Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, cast?.profilePath, holder.mBinding.imgCast, R.drawable.ic_user)
         holder.mBinding.tvCast.text = cast?.name
         holder.mBinding.tvCharacter.text = cast?.character
     }

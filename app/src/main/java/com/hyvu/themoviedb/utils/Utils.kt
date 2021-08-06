@@ -12,13 +12,13 @@ class Utils {
             return ((voteAverage * 5) / 10).toFloat()
         }
 
-        fun loadGlideImage(context: Context?, baseUrl: String, url: String?, imageView: ImageView) {
+        fun loadGlideImage(context: Context?, baseUrl: String, url: String?, imageView: ImageView, errorDrawable: Int) {
             if (context != null && !url.isNullOrEmpty()) {
                 Glide.with(context)
                         .load(baseUrl + url)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .error(R.drawable.ic_image_not_supported)
+                        .error(errorDrawable)
                         .into(imageView)
             }
         }

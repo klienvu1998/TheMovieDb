@@ -2,22 +2,17 @@ package com.hyvu.themoviedb.view
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hyvu.themoviedb.R
-import com.hyvu.themoviedb.adapter.GenresAdapter
 import com.hyvu.themoviedb.adapter.ViewPagerMainAdapter
-import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
-import com.hyvu.themoviedb.data.entity.MovieFullDetails
+import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
-import com.hyvu.themoviedb.utils.Utils
 import com.hyvu.themoviedb.view.*
 import com.hyvu.themoviedb.viewmodel.MainViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
@@ -33,9 +28,8 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var viewPagerMainMainAdapter: ViewPagerMainAdapter
-    private lateinit var viewPagerDetailMainAdapter: ViewPagerMainAdapter
     private var ytbPlayer: YouTubePlayer? = null
-    private var movieId = 0
+    var currentMovie: MovieDetail? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +41,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun liveData() {
-        mViewModel.movieFullDetails.observe(this, { movieDetails ->
-            setupLayoutForDetailScreen(movieDetails)
-            initTabLayoutDetail()
-        })
+
     }
 
     private fun initView() {
@@ -59,29 +50,10 @@ class MainActivity : AppCompatActivity() {
         initYoutube()
         mBinding.tvTitle.isSelected = true
         mBinding.viewPagerContainer.isUserInputEnabled = false
-        mBinding.detailContainer.viewPagerDetail.isUserInputEnabled = false
         mBinding.btnClose.setOnClickListener {
             ytbPlayer?.pause()
             mBinding.motionLayout.transitionToState(R.id.hide)
         }
-    }
-
-    private fun initTabLayoutDetail() {
-        viewPagerDetailMainAdapter = ViewPagerMainAdapter(this, listenerViewDetailPagerAdapter)
-        mBinding.detailContainer.viewPagerDetail.adapter = viewPagerDetailMainAdapter
-        TabLayoutMediator(mBinding.detailContainer.tabLayoutDetail, mBinding.detailContainer.viewPagerDetail) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = "Details"
-                }
-                1 -> {
-                    tab.text = "Cast"
-                }
-                2 -> {
-                    tab.text = "Comment"
-                }
-            }
-        }.attach()
     }
 
     private fun initTabLayoutMain() {
@@ -125,7 +97,6 @@ class MainActivity : AppCompatActivity() {
                     R.id.hide -> {
                         ytbPlayer?.pause()
                         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                        mBinding.detailContainer.progressBarLoadingDetail.visibility = View.VISIBLE
                     }
                 }
             }
@@ -190,52 +161,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showMovieDetails(movieId: Int) {
-        mBinding.detailContainer.progressBarLoadingDetail.visibility = View.VISIBLE
-        this.movieId = movieId
-        mViewModel.fetchMovieDetails(movieId)
+    fun showMovieDetails(movieDetail: MovieDetail) {
+        this.currentMovie = movieDetail
+        supportFragmentManager.beginTransaction().replace(R.id.detail_container, MovieInfoFragment.newInstance(movieDetail)).commit()
+        mBinding.tvTitle.text = movieDetail.title
         mBinding.motionLayout.transitionToState(R.id.show)
     }
 
-    private val listenerViewDetailPagerAdapter = object : ViewPagerMainAdapter.Listener {
-        override fun onCreateFragment(position: Int): Fragment {
-            var fragment: Fragment = DetailFragment()
-            when (position) {
-                0 -> {
-                    fragment = DetailFragment()
-                }
-                1 -> {
-                    fragment = CastFragment.newInstance(movieId)
-                }
-                2 -> {
-                    fragment = UserFragment()
-                }
-            }
-            return fragment
-        }
+    fun showComment(movieDetail: MovieDetail) {
+        supportFragmentManager.beginTransaction().add(R.id.detail_container, CommentFragment.newInstance(movieDetail)).addToBackStack(CommentFragment::class.java.simpleName).commit()
     }
 
     fun loadYtbVideo(key: String) {
         ytbPlayer?.loadVideo(key, 0f)
-    }
-
-    private fun setupLayoutForDetailScreen(movieFullDetails: MovieFullDetails) {
-        mBinding.detailContainer.progressBarLoadingDetail.visibility = View.GONE
-        mBinding.tvTitle.text = movieFullDetails.title
-        mBinding.detailContainer.posterContainer.apply {
-            tvTitle.text = movieFullDetails.title
-            tvTitle.isSelected = true
-            ratingBar.max = 10
-            ratingBar.rating = ((movieFullDetails.voteAverage * 5) / 10).toFloat()
-            tvVoteCount.text = movieFullDetails.voteCount.toString()
-            tvReleaseDate.text = movieFullDetails.releaseDate
-            Utils.loadGlideImage(this@MainActivity, BASE_IMG_LOW_QUALITY_URL, movieFullDetails.posterPath, imgPoster)
-            rcvGenres.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = GenresAdapter(context, movieFullDetails.genres)
-            }
-        }
-        if (!movieFullDetails.spokenLanguages.isNullOrEmpty()) mBinding.detailContainer.tvSpokenLanguage.text = movieFullDetails.spokenLanguages[0].iso6391.toUpperCase()
     }
 
     override fun onStop() {

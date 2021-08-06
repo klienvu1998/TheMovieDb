@@ -19,6 +19,7 @@ import com.hyvu.themoviedb.data.entity.TikMovie
 import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.databinding.ItemTikmovieBinding
 import com.hyvu.themoviedb.utils.Utils
+import com.hyvu.themoviedb.view.MainActivity
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import java.util.*
 
@@ -38,7 +39,7 @@ class TikMoviePagingViewPagerAdapter(
     }
 
     interface Listener {
-        fun showMovieDetails(movieId: Int)
+
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -53,8 +54,8 @@ class TikMoviePagingViewPagerAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movieDetail = getItem(position) as MovieDetail
-        Utils.loadGlideImage(context, BASE_IMG_HIGH_QUALITY_URL, movieDetail.getBackdropImage(), holder.mBinding.imgBackdrop)
-        holder.mBinding.detailContainer.apply {
+        Utils.loadGlideImage(context, BASE_IMG_HIGH_QUALITY_URL, movieDetail.getBackdropImage(), holder.mBinding.imgBackdrop, R.drawable.ic_image_not_supported)
+        holder.mBinding.detailInfoContainer.apply {
             tvTitle.text = movieDetail.title
             tvTitle.isSelected = true
             ratingBar.max = 10
@@ -65,10 +66,10 @@ class TikMoviePagingViewPagerAdapter(
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = GenresAdapter(context, MovieRepository.responseListMovieGenre.value?.genres!!.filter { movieDetail.genreIds.contains(it.id) })
             }
-            Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail.posterPath, imgPoster)
+            Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail.posterPath, imgPoster, R.drawable.ic_image_not_supported)
         }
         holder.mBinding.detailParentContainer.setOnClickListener {
-            listener.showMovieDetails(movieDetail.id)
+            (context as MainActivity).showMovieDetails(movieDetail)
         }
     }
 

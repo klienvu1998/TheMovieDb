@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.entity.MovieDetail
+import com.hyvu.themoviedb.databinding.ItemPosterBinding
 import com.hyvu.themoviedb.utils.Utils
+import com.hyvu.themoviedb.view.MainActivity
 
 class HomeCategoryMovieChildAdapter(
         private val context: Context?,
@@ -20,14 +22,11 @@ class HomeCategoryMovieChildAdapter(
 ): RecyclerView.Adapter<HomeCategoryMovieChildAdapter.ViewHolder>() {
 
     interface Listener {
-        fun onClickedMovie(movieId: Int)
+
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tv_movie_name)
-        val tvRating = view.findViewById<TextView>(R.id.tv_rating)
-        val imgBanner = view.findViewById<ImageView>(R.id.img_poster)
-        val movieContainer = view.findViewById<ConstraintLayout>(R.id.movie_container)
+        val mBinding = ItemPosterBinding.bind(view)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,12 +35,14 @@ class HomeCategoryMovieChildAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = listMovieDetails?.get(position)
-        Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movie?.posterPath, holder.imgBanner)
-        holder.tvName.text = movie?.title
-        holder.tvRating.text = movie?.voteAverage.toString()
-        holder.movieContainer.setOnClickListener {
-            listener.onClickedMovie(movie?.id ?: 0)
+        val movieDetail = listMovieDetails?.get(position)
+        holder.mBinding.apply {
+            Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail?.posterPath, imgPoster, R.drawable.ic_image_not_supported)
+            tvMovieName.text = movieDetail?.title
+            tvRating.text = movieDetail?.voteAverage.toString()
+            movieContainer.setOnClickListener {
+                (context as MainActivity).showMovieDetails(movieDetail!!)
+            }
         }
     }
 

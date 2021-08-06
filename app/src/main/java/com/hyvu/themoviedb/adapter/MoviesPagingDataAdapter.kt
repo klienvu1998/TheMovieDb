@@ -1,14 +1,12 @@
 package com.hyvu.themoviedb.adapter
 
 import android.content.Context
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.entity.MovieDetail
@@ -23,7 +21,6 @@ class MoviesPagingDataAdapter(
     REPO_COMPARATOR) {
 
     interface Listener {
-        fun showMovieDetails(movieId: Int)
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -31,13 +28,13 @@ class MoviesPagingDataAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val movie = getItem(position) as MovieDetail
+        val movieDetail = getItem(position) as MovieDetail
         holder.mBinding.apply {
-            tvMovieName.text = movie.originalTitle
-            tvRating.text = Utils.convertVoteToRating(movie.voteAverage).toString()
-            Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movie.posterPath, imgPoster)
+            tvMovieName.text = movieDetail.originalTitle
+            tvRating.text = Utils.convertVoteToRating(movieDetail.voteAverage).toString()
+            Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail.posterPath, imgPoster, R.drawable.ic_image_not_supported)
             movieContainer.setOnClickListener {
-                listener.showMovieDetails(movie.id)
+                (context as MainActivity).showMovieDetails(movieDetail)
             }
         }
     }

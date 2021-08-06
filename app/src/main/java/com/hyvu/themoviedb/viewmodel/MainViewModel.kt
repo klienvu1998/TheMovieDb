@@ -11,11 +11,6 @@ import com.hyvu.themoviedb.data.repository.MovieRepository
 class MainViewModel(): ViewModel() {
 
     val movieVideos: LiveData<MovieVideos> = MovieRepository.responseMovieVideos
-    val movieFullDetails: LiveData<MovieFullDetails> = MovieRepository.responseCurrentMovieDetail
-
-    fun fetchMovieDetails(movieId: Int) {
-        MovieRepository.fetchMovieDetails(movieId)
-    }
 
     override fun onCleared() {
         super.onCleared()

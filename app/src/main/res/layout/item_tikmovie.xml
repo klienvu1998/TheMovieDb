@@ -26,11 +26,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <include android:id="@+id/detail_container"
+        <include android:id="@+id/detail_info_container"
             layout="@layout/layout_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

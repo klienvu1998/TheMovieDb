@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -24,8 +25,7 @@
         android:id="@+id/nested_container"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_height="wrap_content">
 
         <include android:id="@+id/poster_container"
             layout="@layout/layout_detail"/>
@@ -34,11 +34,22 @@
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout_detail"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="35dp"
+        app:layout_constraintWidth_percent="0.5"
         android:background="@android:color/white"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@id/nested_container"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/btn_comment"
+        android:layout_width="35dp"
+        android:layout_height="0dp"
+        android:background="@drawable/ic_comment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tab_layout_detail"
+        app:layout_constraintBottom_toBottomOf="@id/tab_layout_detail"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_detail"

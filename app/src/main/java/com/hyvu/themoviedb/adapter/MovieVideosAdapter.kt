@@ -38,7 +38,7 @@ class MovieVideosAdapter(
 
     override fun onBindViewHolder(holder: ViewBinder, position: Int) {
         val videoDetail = listVideos[position]
-        Utils.loadGlideImage(context, "", Constraints.getYoutubeThumbnailLink(videoDetail.key), holder.imgVideos)
+        Utils.loadGlideImage(context, "", Constraints.getYoutubeThumbnailLink(videoDetail.key), holder.imgVideos, R.drawable.ic_image_not_supported)
         holder.tvName.text = videoDetail.name
         holder.container.setOnClickListener {
             listener.onItemClicked(videoDetail)

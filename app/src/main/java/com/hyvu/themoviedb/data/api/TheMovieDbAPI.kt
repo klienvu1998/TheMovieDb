@@ -11,8 +11,8 @@ interface TheMovieDbAPI {
 
     @GET("movie/popular")
     fun getPopularMovie(
-            @Query("page") page: Int)
-    : Single<MoviesByGenre>
+            @Query("page") page: Int
+    ): Single<MoviesByGenre>
 
     @GET("genre/movie/list")
     fun getListGenres(): Observable<Genres>
@@ -43,4 +43,10 @@ interface TheMovieDbAPI {
     fun getCredits(
         @Path("movie_id") movieId: Int
     ): Single<Credits>
+
+    @GET("movie/{movie_id}/reviews")
+    fun getComments(
+        @Path("movie_id") movieId: Int,
+        @Query("page") page: Int
+    ): Single<Comments>
 }

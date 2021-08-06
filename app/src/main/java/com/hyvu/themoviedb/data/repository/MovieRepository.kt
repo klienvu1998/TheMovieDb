@@ -9,6 +9,7 @@ import androidx.paging.rxjava2.flowable
 import com.hyvu.themoviedb.data.repository.datasource.MoviePagingSource
 import com.hyvu.themoviedb.data.api.TheMovieDbClient
 import com.hyvu.themoviedb.data.entity.*
+import com.hyvu.themoviedb.data.repository.datasource.CommentPagingSource
 import com.hyvu.themoviedb.data.repository.datasource.PopularMoviePagingSource
 import com.hyvu.themoviedb.utils.Constraints
 import io.reactivex.Flowable
@@ -138,6 +139,17 @@ object MovieRepository {
                         enablePlaceholders = false
                 ),
                 pagingSourceFactory = { PopularMoviePagingSource(TheMovieDbClient.getClient()) }
+        ).flowable
+    }
+
+    fun fetchMovieComments(movieId: Int): Flowable<PagingData<Comment>> {
+        return Pager(
+            config = PagingConfig(
+                maxSize = Constraints.MAX_ITEM_PER_SCROLL,
+                pageSize = Constraints.NETWORK_PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { CommentPagingSource(TheMovieDbClient.getClient(), movieId) }
         ).flowable
     }
 

@@ -53,6 +53,12 @@ class CommentFragment : Fragment() {
             commentPagingDataAdapter = CommentPagingDataAdapter(context)
             adapter = commentPagingDataAdapter
         }
+        mBinding.toolBar.apply {
+            tvTitle.text = "Comments"
+            btnBack.setOnClickListener {
+                parentFragmentManager.findFragmentByTag(CommentFragment::class.java.simpleName)
+            }
+        }
     }
 
     private fun liveData() {

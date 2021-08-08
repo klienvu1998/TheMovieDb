@@ -1,5 +1,6 @@
 package com.hyvu.themoviedb.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,16 +10,21 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyvu.themoviedb.R
+import com.hyvu.themoviedb.adapter.MovieImagesAdapter
 import com.hyvu.themoviedb.adapter.MovieVideosAdapter
+import com.hyvu.themoviedb.data.entity.Backdrop
+import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.entity.MovieVideoDetail
 import com.hyvu.themoviedb.databinding.FragmentDetailBinding
 import com.hyvu.themoviedb.viewmodel.MovieInfoViewModel
-import com.hyvu.themoviedb.viewmodel.factory.MovieInfoViewModelFactory
 
 class DetailFragment : Fragment() {
 
     private lateinit var mBinding: FragmentDetailBinding
     private val mViewModel by viewModels<MovieInfoViewModel>()
+    private lateinit var movieDetail: MovieDetail
+    private var movieVideosAdapter: MovieVideosAdapter? = null
+    private var movieImagesAdapter: MovieImagesAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +32,13 @@ class DetailFragment : Fragment() {
     ): View {
         val v = inflater.inflate(R.layout.fragment_detail, container, false)
         mBinding = FragmentDetailBinding.bind(v)
+        movieDetail = (context as MainActivity).currentMovie!!
+        getData()
         return mBinding.root
+    }
+
+    private fun getData() {
+        mViewModel.fetchMovieImages(movieDetail.id)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +48,16 @@ class DetailFragment : Fragment() {
     }
 
     private fun initView() {
-
+        mBinding.rcvMoreVideos.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            movieVideosAdapter = MovieVideosAdapter(context, listenerMovieVideosAdapter)
+            adapter = movieVideosAdapter
+        }
+        mBinding.rcvMoreImages.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            movieImagesAdapter = MovieImagesAdapter(context, listenerMovieImagesAdapter)
+            adapter = movieImagesAdapter
+        }
     }
 
     private fun liveData() {
@@ -50,10 +71,10 @@ class DetailFragment : Fragment() {
             mBinding.tvProductCompany.text = companiesName
         })
         mViewModel.movieVideos.observe(viewLifecycleOwner, { movieVideos ->
-            mBinding.rcvMoreVideos.apply {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = MovieVideosAdapter(context, movieVideos.movieVideoDetails, listenerMovieVideosAdapter)
-            }
+            movieVideosAdapter?.updateData(movieVideos.movieVideoDetails)
+        })
+        mViewModel.movieImages.observe(viewLifecycleOwner, { movieImages ->
+            movieImagesAdapter?.updateData(movieImages.backdrops)
         })
     }
 
@@ -61,5 +82,16 @@ class DetailFragment : Fragment() {
         override fun onItemClicked(videoDetail: MovieVideoDetail) {
             (activity as MainActivity).loadYtbVideo(videoDetail.key)
         }
+    }
+
+    private val listenerMovieImagesAdapter = object : MovieImagesAdapter.Listener {
+        override fun onImageClicked(backdrop: Backdrop) {
+            val intent = Intent(activity, ImageActivity::class.java)
+            val bundle = Bundle()
+            bundle.putParcelable(ImageActivity.ARG_BACKDROP, backdrop)
+            intent.putExtras(bundle)
+            startActivity(intent)
+        }
+
     }
 }

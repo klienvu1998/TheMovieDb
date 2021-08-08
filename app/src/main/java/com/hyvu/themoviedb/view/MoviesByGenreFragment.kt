@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.MoviesPagingDataAdapter
@@ -76,7 +78,7 @@ class MoviesByGenreFragment : Fragment() {
         }
         mBinding.toolBarContainer.tvTitle.text = genre.name
         mBinding.toolBarContainer.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+
         }
     }
 

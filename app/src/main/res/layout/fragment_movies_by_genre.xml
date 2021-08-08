@@ -4,8 +4,10 @@
     android:layout_height="match_parent"
     android:id="@+id/movie_by_genre_container"
     android:background="@color/white"
+    android:clickable="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusable="true">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/progress_bar"

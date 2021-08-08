@@ -145,10 +145,10 @@ class MainActivity : AppCompatActivity() {
 
     private val listenerViewMainPagerAdapter = object : ViewPagerMainAdapter.Listener {
         override fun onCreateFragment(position: Int): Fragment {
-            var fragment: Fragment = HomeFragment()
+            var fragment: Fragment = HomeContainerFragment()
             when (position) {
                 0 -> {
-                    fragment = HomeFragment()
+                    fragment = HomeContainerFragment()
                 }
                 1 -> {
                     fragment = TikMovieFragment()

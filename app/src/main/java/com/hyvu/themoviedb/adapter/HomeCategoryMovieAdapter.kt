@@ -82,7 +82,7 @@ class HomeCategoryMovieAdapter(
                     getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
                 }
                 val compositePageTransformer = CompositePageTransformer()
-                compositePageTransformer.addTransformer(MarginPageTransformer(40))
+                compositePageTransformer.addTransformer(MarginPageTransformer(30))
                 compositePageTransformer.addTransformer { page, position ->
                     val r = 1 - Math.abs(position)
                     page.scaleY = 0.85f + r * 0.15f

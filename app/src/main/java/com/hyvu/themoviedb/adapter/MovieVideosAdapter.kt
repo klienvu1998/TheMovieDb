@@ -16,12 +16,18 @@ import com.hyvu.themoviedb.utils.Utils
 
 class MovieVideosAdapter(
         private val context: Context?,
-        private val listVideos: List<MovieVideoDetail>,
         private val listener: Listener
 ): RecyclerView.Adapter<MovieVideosAdapter.ViewBinder>() {
 
     interface Listener {
         fun onItemClicked(videoDetail: MovieVideoDetail)
+    }
+
+    private var listVideos: List<MovieVideoDetail> = ArrayList()
+
+    fun updateData(data: List<MovieVideoDetail>) {
+        this.listVideos = data
+        notifyDataSetChanged()
     }
 
     class ViewBinder(view: View): RecyclerView.ViewHolder(view) {

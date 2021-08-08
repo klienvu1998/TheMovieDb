@@ -2,10 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:background="@color/white"
     android:padding="10dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:focusable="true">
 
     <TextView
         android:id="@+id/tv_spoken_language"
@@ -13,8 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/border_rectangle_red"
         android:padding="3dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
+
         android:textSize="15sp"
         android:textColor="@android:color/holo_red_light"
         app:layout_constraintTop_toTopOf="parent"

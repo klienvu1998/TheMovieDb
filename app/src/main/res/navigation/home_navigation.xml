@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_navigation"
+    app:startDestination="@id/homeFragment3">
+    <fragment
+        android:id="@+id/homeFragment3"
+        android:name="com.hyvu.themoviedb.view.HomeContainerFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_moviesByGenreFragment"
+            app:destination="@id/moviesByGenreFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/moviesByGenreFragment"
+        android:name="com.hyvu.themoviedb.view.MoviesByGenreFragment"
+        android:label="MoviesByGenreFragment" />
+</navigation>

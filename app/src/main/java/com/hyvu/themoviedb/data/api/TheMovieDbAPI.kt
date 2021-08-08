@@ -49,4 +49,9 @@ interface TheMovieDbAPI {
         @Path("movie_id") movieId: Int,
         @Query("page") page: Int
     ): Single<Comments>
+
+    @GET("movie/{movie_id}/images")
+    fun getMovieImages(
+        @Path("movie_id") movieId: Int
+    ): Single<MovieImages>
 }

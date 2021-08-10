@@ -14,6 +14,7 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.api.BASE_IMG_HIGH_QUALITY_URL
 import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.api.BASE_IMG_MEDIUM_QUALITY_URL
+import com.hyvu.themoviedb.data.entity.Genres
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.entity.TikMovie
 import com.hyvu.themoviedb.data.repository.MovieRepository
@@ -26,6 +27,7 @@ import java.util.*
 class TikMoviePagingViewPagerAdapter(
         private val context: Context?,
         private val listener: Listener,
+        private val listMovieGenre: Genres
 ): PagingDataAdapter<MovieDetail, TikMoviePagingViewPagerAdapter.ViewHolder>(REPO_COMPARATOR) {
 
     companion object {
@@ -64,7 +66,7 @@ class TikMoviePagingViewPagerAdapter(
             tvReleaseDate.text = movieDetail.releaseDate
             rcvGenres.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = GenresAdapter(context, MovieRepository.responseListMovieGenre.value?.genres!!.filter { movieDetail.genreIds.contains(it.id) })
+                adapter = GenresAdapter(context, listMovieGenre.genres.filter { movieDetail.genreIds.contains(it.id) })
             }
             Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail.posterPath, imgPoster, R.drawable.ic_image_not_supported)
         }

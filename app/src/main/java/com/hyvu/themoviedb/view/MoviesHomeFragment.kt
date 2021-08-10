@@ -1,25 +1,23 @@
 package com.hyvu.themoviedb.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.CompositePageTransformer
-import androidx.viewpager2.widget.MarginPageTransformer
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.HomeCategoryMovieAdapter
-import com.hyvu.themoviedb.adapter.ViewPagerSliderAdapter
 import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.data.entity.MovieDetail
-import com.hyvu.themoviedb.data.entity.MoviesByGenre
-import com.hyvu.themoviedb.data.entity.TrendingMovie
-import com.hyvu.themoviedb.databinding.FragmentMoviesHomeFragmetBinding
+import com.hyvu.themoviedb.databinding.FragmentMoviesHomeFragmentBinding
 import com.hyvu.themoviedb.viewmodel.HomeViewModel
+import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import java.util.*
+import javax.inject.Inject
 
 class MoviesHomeFragment : Fragment() {
 
@@ -27,8 +25,13 @@ class MoviesHomeFragment : Fragment() {
         const val TRENDING_MOVIE = "TRENDING_MOVIE"
     }
 
-    private lateinit var mBinding: FragmentMoviesHomeFragmetBinding
-    private val mViewModel by viewModels<HomeViewModel>()
+    private lateinit var mBinding: FragmentMoviesHomeFragmentBinding
+
+    @Inject
+    lateinit var providerFactory: MainViewModelFactory
+    private val mViewModel by lazy {
+        ViewModelProvider(this, providerFactory)[HomeViewModel::class.java]
+    }
     private var adapterHomeCategoryMovie: HomeCategoryMovieAdapter? = null
     private val listMovieCategory: LinkedHashMap<Genre, List<MovieDetail>> = LinkedHashMap()
 
@@ -43,10 +46,15 @@ class MoviesHomeFragment : Fragment() {
         this.listener = listener
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as MainActivity).mainComponent.inject(this)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val v = inflater.inflate(R.layout.fragment_movies_home_fragmet, container, false)
-        mBinding = FragmentMoviesHomeFragmetBinding.bind(v)
+        val v = inflater.inflate(R.layout.fragment_movies_home_fragment, container, false)
+        mBinding = FragmentMoviesHomeFragmentBinding.bind(v)
         return mBinding.root
     }
 
@@ -94,6 +102,9 @@ class MoviesHomeFragment : Fragment() {
 
     private val listenerHomeCategoryAdapter = object : HomeCategoryMovieAdapter.Listener {
         override fun onClickedSeeAll(genre: Genre) {
+            val bundle = Bundle()
+            bundle.putParcelable(MoviesByGenreFragment.ARG_GENRE, genre)
+//            findNavController().navigate(R.id.action_moviesHomeFragment_to_moviesByGenreFragment, bundle)
             listener?.onClickedSeeAll(genre)
         }
 

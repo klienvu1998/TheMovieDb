@@ -1,5 +1,6 @@
 package com.hyvu.themoviedb.view
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,15 +13,23 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.TikMoviePagingViewPagerAdapter
 import com.hyvu.themoviedb.databinding.FragmentTikmovieBinding
 import com.hyvu.themoviedb.viewmodel.TikMovieViewModel
-import com.hyvu.themoviedb.viewmodel.factory.TikMovieViewModelFactory
+import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import javax.inject.Inject
 
 class TikMovieFragment : Fragment() {
 
+    @Inject
+    lateinit var providerFactory: MainViewModelFactory
     private lateinit var mBinding: FragmentTikmovieBinding
     private val mViewModel by lazy {
-        ViewModelProvider(this, TikMovieViewModelFactory()).get(TikMovieViewModel::class.java)
+        ViewModelProvider(this, providerFactory).get(TikMovieViewModel::class.java)
     }
     private var tikMoviePagingViewPagerAdapter: TikMoviePagingViewPagerAdapter? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as MainActivity).mainComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +53,7 @@ class TikMovieFragment : Fragment() {
 
     private fun initView() {
         mBinding.rcvMovie.apply {
-            tikMoviePagingViewPagerAdapter = TikMoviePagingViewPagerAdapter(context, listenerTikMovieViewPagerAdapter)
+            tikMoviePagingViewPagerAdapter = mViewModel.movieGenres.value?.let { TikMoviePagingViewPagerAdapter(context, listenerTikMovieViewPagerAdapter, it) }
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             PagerSnapHelper().attachToRecyclerView(this)
             adapter = tikMoviePagingViewPagerAdapter

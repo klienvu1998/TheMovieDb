@@ -1,5 +1,6 @@
 package com.hyvu.themoviedb.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,8 @@ import com.hyvu.themoviedb.data.entity.MovieFullDetails
 import com.hyvu.themoviedb.databinding.FragmentMovieInfoBinding
 import com.hyvu.themoviedb.utils.Utils
 import com.hyvu.themoviedb.viewmodel.MovieInfoViewModel
-import com.hyvu.themoviedb.viewmodel.factory.MovieInfoViewModelFactory
+import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import javax.inject.Inject
 
 class MovieInfoFragment: Fragment() {
 
@@ -32,13 +34,20 @@ class MovieInfoFragment: Fragment() {
             return f
         }
     }
+    @Inject
+    lateinit var providerFactory: MainViewModelFactory
 
     private lateinit var movieDetail: MovieDetail
     private lateinit var mBinding: FragmentMovieInfoBinding
     private val mViewModel by lazy {
-        ViewModelProvider(this, MovieInfoViewModelFactory()).get(MovieInfoViewModel::class.java)
+        ViewModelProvider(this, providerFactory).get(MovieInfoViewModel::class.java)
     }
     private lateinit var viewPagerDetailMainAdapter: ViewPagerInfoAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as MainActivity).mainComponent.inject(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v = inflater.inflate(R.layout.fragment_movie_info, container, false)

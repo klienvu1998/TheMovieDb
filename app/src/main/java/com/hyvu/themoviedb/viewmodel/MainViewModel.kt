@@ -7,13 +7,17 @@ import com.hyvu.themoviedb.data.entity.Credits
 import com.hyvu.themoviedb.data.entity.MovieFullDetails
 import com.hyvu.themoviedb.data.entity.MovieVideos
 import com.hyvu.themoviedb.data.repository.MovieRepository
+import com.hyvu.themoviedb.di.scope.ActivityScope
+import javax.inject.Inject
 
-class MainViewModel(): ViewModel() {
+@ActivityScope
+class MainViewModel @Inject constructor(val repository: MovieRepository): ViewModel() {
 
-    val movieVideos: LiveData<MovieVideos> = MovieRepository.responseMovieVideos
+    val movieVideos: LiveData<MovieVideos> = repository.responseMovieVideos
 
     override fun onCleared() {
         super.onCleared()
+        repository.deinit()
     }
 
 }

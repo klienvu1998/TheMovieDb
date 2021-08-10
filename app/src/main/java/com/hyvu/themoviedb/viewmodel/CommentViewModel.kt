@@ -4,36 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
-import com.hyvu.themoviedb.data.entity.Genres
-import com.hyvu.themoviedb.data.entity.MovieDetail
-import com.hyvu.themoviedb.data.entity.MoviesByGenre
-import com.hyvu.themoviedb.data.entity.TikMovie
+import com.hyvu.themoviedb.data.entity.Comment
 import com.hyvu.themoviedb.data.repository.MovieRepository
-import com.hyvu.themoviedb.di.scope.ActivityScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-@ActivityScope
-class TikMovieViewModel @Inject constructor(val repository: MovieRepository): ViewModel() {
+class CommentViewModel @Inject constructor(val repository: MovieRepository): ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    private val _tikMovieDetails: MutableLiveData<PagingData<MovieDetail>> = MutableLiveData()
-    val tikMovieDetails: LiveData<PagingData<MovieDetail>> = _tikMovieDetails
-    val movieGenres: LiveData<Genres> = repository.responseListMovieGenre
+    private val _movieComments: MutableLiveData<PagingData<Comment>> = MutableLiveData()
+    val movieComments: LiveData<PagingData<Comment>> = _movieComments
 
-    fun fetchLatestMovie() {
-        repository.fetchLatestMovie()
-    }
-
-    fun fetchTikMovie() {
+    fun fetchMovieComments(movieId: Int) {
         compositeDisposable.add(
-                repository.fetchPopularMovies()
+                repository.fetchMovieComments(movieId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ data ->
-                            _tikMovieDetails.postValue(data)
+                        .subscribe({
+                            _movieComments.postValue(it)
                         }, { e ->
                             e.printStackTrace()
                         })
@@ -44,5 +34,4 @@ class TikMovieViewModel @Inject constructor(val repository: MovieRepository): Vi
         super.onCleared()
         compositeDisposable.clear()
     }
-
 }

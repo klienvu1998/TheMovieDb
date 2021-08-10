@@ -7,18 +7,20 @@ import androidx.paging.PagingData
 import com.hyvu.themoviedb.data.api.TheMovieDbClient
 import com.hyvu.themoviedb.data.entity.*
 import com.hyvu.themoviedb.data.repository.MovieRepository
+import com.hyvu.themoviedb.di.scope.ActivityScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class MovieInfoViewModel: ViewModel() {
+@ActivityScope
+class MovieInfoViewModel @Inject constructor(val repository: MovieRepository): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    val movieVideos: LiveData<MovieVideos> = MovieRepository.responseMovieVideos
-    val movieCredits: LiveData<Credits> = MovieRepository.responseMovieCredits
-    val movieFullDetails: LiveData<MovieFullDetails> = MovieRepository.responseCurrentMovieDetail
-    private val _movieComments: MutableLiveData<PagingData<Comment>> = MutableLiveData()
-    val movieComments: LiveData<PagingData<Comment>> = _movieComments
+
+    val movieVideos: LiveData<MovieVideos> = repository.responseMovieVideos
+    val movieCredits: LiveData<Credits> = repository.responseMovieCredits
+    val movieFullDetails: LiveData<MovieFullDetails> = repository.responseCurrentMovieDetail
     private val _movieImages: MutableLiveData<MovieImages> = MutableLiveData()
     val movieImages: LiveData<MovieImages> = _movieImages
 
@@ -35,25 +37,12 @@ class MovieInfoViewModel: ViewModel() {
         )
     }
 
-    fun fetchMovieComments(movieId: Int) {
-        compositeDisposable.add(
-            MovieRepository.fetchMovieComments(movieId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    _movieComments.postValue(it)
-                }, { e ->
-                    e.printStackTrace()
-                })
-        )
-    }
-
     fun fetchMovieDetails(movieId: Int) {
-        MovieRepository.fetchMovieDetails(movieId)
+        repository.fetchMovieDetails(movieId)
     }
 
     fun fetchMovieCredits(movieId: Int) {
-        MovieRepository.fetchMovieCredits(movieId)
+        repository.fetchMovieCredits(movieId)
     }
 
     override fun onCleared() {

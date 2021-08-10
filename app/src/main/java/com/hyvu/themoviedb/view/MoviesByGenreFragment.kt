@@ -1,31 +1,31 @@
 package com.hyvu.themoviedb.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.MoviesPagingDataAdapter
 import com.hyvu.themoviedb.data.entity.Genre
-import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.FragmentMoviesByGenreBinding
 import com.hyvu.themoviedb.viewmodel.HomeViewModel
+import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import javax.inject.Inject
 
 class MoviesByGenreFragment : Fragment() {
 
     companion object {
-        const val ARG_GENRE_ID = "ARG_GENRE_ID"
+        const val ARG_GENRE = "ARG_GENRE_ID"
         const val ARG_GENRE_NAME = "ARG_GENRE_NAME"
         fun newInstance(genre: Genre): MoviesByGenreFragment {
             val f = MoviesByGenreFragment()
             val arg = Bundle()
-            arg.putParcelable(ARG_GENRE_ID, genre)
+            arg.putParcelable(ARG_GENRE, genre)
             f.arguments = arg
             return f
         }
@@ -39,10 +39,20 @@ class MoviesByGenreFragment : Fragment() {
         }
     }
 
-    private val mViewModel by viewModels<HomeViewModel>()
+    @Inject
+    lateinit var providerFactory: MainViewModelFactory
+    private val mViewModel by lazy {
+        ViewModelProvider(this, providerFactory)[HomeViewModel::class.java]
+    }
+
     private lateinit var genre: Genre
     private lateinit var mBinding: FragmentMoviesByGenreBinding
     private var moviePagingDataAdapter: MoviesPagingDataAdapter? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (activity as MainActivity).mainComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,7 +60,7 @@ class MoviesByGenreFragment : Fragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_movies_by_genre, container, false)
         mBinding = FragmentMoviesByGenreBinding.bind(v)
-        genre = arguments?.getParcelable(ARG_GENRE_ID) ?: Genre(null, arguments?.getString(ARG_GENRE_NAME, "") ?: "")
+        genre = arguments?.getParcelable(ARG_GENRE) ?: Genre(null, arguments?.getString(ARG_GENRE_NAME, "") ?: "")
         if (genre.id != null) mViewModel.getMoviesPerPage(genre.id!!)
         return mBinding.root
     }
@@ -78,7 +88,7 @@ class MoviesByGenreFragment : Fragment() {
         }
         mBinding.toolBarContainer.tvTitle.text = genre.name
         mBinding.toolBarContainer.btnBack.setOnClickListener {
-
+            parentFragment?.childFragmentManager?.popBackStack()
         }
     }
 

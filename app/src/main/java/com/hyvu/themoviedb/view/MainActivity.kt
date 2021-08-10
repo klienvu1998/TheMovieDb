@@ -8,30 +8,38 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
+import com.hyvu.themoviedb.MyApplication
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.ViewPagerMainAdapter
 import com.hyvu.themoviedb.data.entity.MovieDetail
-import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
+import com.hyvu.themoviedb.di.MainComponent
 import com.hyvu.themoviedb.view.*
 import com.hyvu.themoviedb.viewmodel.MainViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity() {
 
-    val mViewModel by lazy {
-        ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java)
+    @Inject
+    lateinit var providerFactory: MainViewModelFactory
+    private val mViewModel: MainViewModel by lazy {
+        ViewModelProvider(this, providerFactory).get(MainViewModel::class.java)
     }
+    lateinit var mainComponent: MainComponent
+
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var viewPagerMainMainAdapter: ViewPagerMainAdapter
     private var ytbPlayer: YouTubePlayer? = null
     var currentMovie: MovieDetail? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        mainComponent = (application as MyApplication).appComponent.mainComponent().create()
+        mainComponent.inject(this)
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mBinding.root
@@ -143,9 +151,11 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    val homeFragment = HomeContainerFragment()
+
     private val listenerViewMainPagerAdapter = object : ViewPagerMainAdapter.Listener {
         override fun onCreateFragment(position: Int): Fragment {
-            var fragment: Fragment = HomeContainerFragment()
+            var fragment: Fragment = TikMovieFragment()
             when (position) {
                 0 -> {
                     fragment = HomeContainerFragment()
@@ -183,7 +193,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         mBinding.youtubeView.release()
-        MovieRepository.deinit()
         super.onDestroy()
     }
 

@@ -6,19 +6,24 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.rxjava2.flowable
+import com.hyvu.themoviedb.data.api.TheMovieDbAPI
 import com.hyvu.themoviedb.data.repository.datasource.MoviePagingSource
 import com.hyvu.themoviedb.data.api.TheMovieDbClient
 import com.hyvu.themoviedb.data.entity.*
 import com.hyvu.themoviedb.data.repository.datasource.CommentPagingSource
 import com.hyvu.themoviedb.data.repository.datasource.PopularMoviePagingSource
+import com.hyvu.themoviedb.di.scope.ActivityScope
 import com.hyvu.themoviedb.utils.Constraints
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object MovieRepository {
+@ActivityScope
+class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI) {
     private val compositeDisposable = CompositeDisposable()
 
     private val _responseMovieVideos = MutableLiveData<MovieVideos>()
@@ -47,7 +52,7 @@ object MovieRepository {
 
     fun fetchMovieCredits(movieId: Int) {
         compositeDisposable.add(
-            TheMovieDbClient.getClient().getCredits(movieId)
+            apiService.getCredits(movieId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -60,7 +65,7 @@ object MovieRepository {
 
     fun fetchTrendingMovie() {
         compositeDisposable.add(
-                TheMovieDbClient.getClient().getTrendingMovies()
+                apiService.getTrendingMovies()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
@@ -73,10 +78,10 @@ object MovieRepository {
 
     fun fetchMovieDetails(movieId: Int) {
         compositeDisposable.add(
-                TheMovieDbClient.getClient().getMovieDetails(movieId)
+                apiService.getMovieDetails(movieId)
                         .flatMap { detail ->
                             _responseCurrentMovieDetail.postValue(detail)
-                            TheMovieDbClient.getClient().getMovieVideos(movieId)
+                            apiService.getMovieVideos(movieId)
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                         }
@@ -94,7 +99,7 @@ object MovieRepository {
         var i = 0
         val map = LinkedHashMap<Genre, List<MovieDetail>>()
         compositeDisposable.add(
-                TheMovieDbClient.getClient().getListGenres()
+                apiService.getListGenres()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ data ->
@@ -102,7 +107,7 @@ object MovieRepository {
                             Observable.just(data.genres)
                                     .concatMap { genres -> Observable.fromIterable(genres) }
                                     .concatMapSingle { genre ->
-                                        genre.id?.let { TheMovieDbClient.getClient().getMoviesByGenre(it, 1) }
+                                        genre.id?.let { apiService.getMoviesByGenre(it, 1) }
                                     }
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
@@ -127,7 +132,7 @@ object MovieRepository {
                 pageSize = Constraints.NETWORK_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { MoviePagingSource(TheMovieDbClient.getClient(), genreId) }
+            pagingSourceFactory = { MoviePagingSource(apiService, genreId) }
         ).flowable
     }
 
@@ -138,7 +143,7 @@ object MovieRepository {
                         pageSize = Constraints.NETWORK_PAGE_SIZE,
                         enablePlaceholders = false
                 ),
-                pagingSourceFactory = { PopularMoviePagingSource(TheMovieDbClient.getClient()) }
+                pagingSourceFactory = { PopularMoviePagingSource(apiService) }
         ).flowable
     }
 
@@ -149,26 +154,13 @@ object MovieRepository {
                 pageSize = Constraints.NETWORK_PAGE_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { CommentPagingSource(TheMovieDbClient.getClient(), movieId) }
+            pagingSourceFactory = { CommentPagingSource(apiService, movieId) }
         ).flowable
-    }
-
-    fun fetchMovieVideos(movieId: Int) {
-        compositeDisposable.add(
-                TheMovieDbClient.getClient().getMovieVideos(movieId)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ movieVideos ->
-                            _responseMovieVideos.postValue(movieVideos)
-                        }, { e ->
-                            e.printStackTrace()
-                        })
-        )
     }
 
     fun fetchLatestMovie() {
         compositeDisposable.add(
-                TheMovieDbClient.getClient().getLatestMovie()
+                apiService.getLatestMovie()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({

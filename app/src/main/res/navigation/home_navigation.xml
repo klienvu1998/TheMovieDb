@@ -3,16 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/homeContainerFragment">
-    <fragment
-        android:id="@+id/homeContainerFragment"
-        android:name="com.hyvu.themoviedb.view.HomeContainerFragment"
-        android:label="HomeContainerFragment"
-        tools:layout="@layout/fragment_home_container">
-        <action
-            android:id="@+id/action_homeContainerFragment_to_moviesHomeFragment"
-            app:destination="@id/moviesHomeFragment" />
-    </fragment>
+    app:startDestination="@id/moviesHomeFragment">
     <fragment
         android:id="@+id/moviesHomeFragment"
         android:name="com.hyvu.themoviedb.view.MoviesHomeFragment"
@@ -26,5 +17,10 @@
         android:id="@+id/moviesByGenreFragment"
         android:name="com.hyvu.themoviedb.view.MoviesByGenreFragment"
         android:label="MoviesByGenreFragment"
-        tools:layout="@layout/fragment_movies_by_genre"/>
+        tools:layout="@layout/fragment_movies_by_genre">
+        <action
+            android:id="@+id/action_moviesByGenreFragment_to_moviesHomeFragment"
+            app:destination="@id/moviesHomeFragment"
+            app:popUpTo="@id/moviesByGenreFragment" />
+    </fragment>
 </navigation>

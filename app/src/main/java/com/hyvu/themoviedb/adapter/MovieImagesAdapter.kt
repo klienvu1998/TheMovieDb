@@ -17,7 +17,7 @@ class MovieImagesAdapter(
 ): RecyclerView.Adapter<MovieImagesAdapter.ViewHolder>() {
 
     interface Listener {
-        fun onImageClicked(backdrop: Backdrop)
+        fun onImageClicked(backdrops: List<Backdrop>, position: Int)
     }
 
     private var listImages: List<Backdrop> = ArrayList()
@@ -37,11 +37,12 @@ class MovieImagesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         val backdrop = listImages[position]
         holder.mBinding.apply {
             Utils.loadGlideImage(context, BASE_IMG_MEDIUM_QUALITY_URL, backdrop.filePath, imgBackdrop, R.drawable.ic_image_not_supported)
             imgBackdrop.setOnClickListener {
-                listener.onImageClicked(backdrop)
+                listener.onImageClicked(listImages, position)
             }
         }
     }

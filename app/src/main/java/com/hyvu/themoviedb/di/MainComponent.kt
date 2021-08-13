@@ -3,6 +3,7 @@ package com.hyvu.themoviedb.di
 import com.hyvu.themoviedb.di.module.MainViewModelModule
 import com.hyvu.themoviedb.di.scope.ActivityScope
 import com.hyvu.themoviedb.view.*
+import com.hyvu.themoviedb.view.activity.MainActivity
 import dagger.Subcomponent
 
 @ActivityScope

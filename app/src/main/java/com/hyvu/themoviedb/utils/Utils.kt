@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.Target
 import com.hyvu.themoviedb.R
 
 class Utils {
@@ -15,11 +16,11 @@ class Utils {
         fun loadGlideImage(context: Context?, baseUrl: String, url: String?, imageView: ImageView, errorDrawable: Int) {
             if (context != null && !url.isNullOrEmpty()) {
                 Glide.with(context)
-                        .load(baseUrl + url)
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .error(errorDrawable)
-                        .into(imageView)
+                    .load(baseUrl + url)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(errorDrawable)
+                    .into(imageView)
             }
         }
     }

@@ -66,6 +66,11 @@
 
     <ConstraintSet android:id="@+id/hide">
         <Constraint
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            motion:layout_constraintBottom_toBottomOf="parent"/>
+        <Constraint
             android:id="@+id/view_pager_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -105,11 +110,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             motion:layout_constraintTop_toTopOf="@id/tv_title"/>
-        <Constraint
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            motion:layout_constraintBottom_toBottomOf="parent"/>
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/show">

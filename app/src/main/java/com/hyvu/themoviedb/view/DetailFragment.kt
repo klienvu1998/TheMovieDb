@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyvu.themoviedb.R
@@ -17,12 +16,15 @@ import com.hyvu.themoviedb.data.entity.Backdrop
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.entity.MovieVideoDetail
 import com.hyvu.themoviedb.databinding.FragmentDetailBinding
-import com.hyvu.themoviedb.viewmodel.HomeViewModel
+import com.hyvu.themoviedb.view.activity.MainActivity
+import com.hyvu.themoviedb.view.activity.MovieImageActivity
+import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.MovieInfoViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.util.ArrayList
 import javax.inject.Inject
 
-class DetailFragment : Fragment() {
+class DetailFragment : BaseFragment() {
 
     private lateinit var mBinding: FragmentDetailBinding
     @Inject
@@ -34,33 +36,28 @@ class DetailFragment : Fragment() {
     private var movieVideosAdapter: MovieVideosAdapter? = null
     private var movieImagesAdapter: MovieImagesAdapter? = null
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity as MainActivity).mainComponent.inject(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val v = inflater.inflate(R.layout.fragment_detail, container, false)
         mBinding = FragmentDetailBinding.bind(v)
-        movieDetail = (context as MainActivity).currentMovie!!
-        getData()
         return mBinding.root
     }
 
-    private fun getData() {
+    override fun fetchData() {
         mViewModel.fetchMovieImages(movieDetail.id)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initView()
-        liveData()
+    override fun inject() {
+        (activity as MainActivity).mainComponent.inject(this)
     }
 
-    private fun initView() {
+    override fun getBundle() {
+        movieDetail = (context as MainActivity).currentMovie!!
+    }
+
+    override fun initView() {
         mBinding.rcvMoreVideos.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             movieVideosAdapter = MovieVideosAdapter(context, listenerMovieVideosAdapter)
@@ -73,7 +70,7 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun liveData() {
+    override fun observerLiveData() {
         mViewModel.movieFullDetails.observe(viewLifecycleOwner, { movieDetails ->
             mBinding.tvContent.text = movieDetails.overview
             var companiesName = if (movieDetails.productionCompanies.isNotEmpty()) "" else "N/A"
@@ -98,10 +95,11 @@ class DetailFragment : Fragment() {
     }
 
     private val listenerMovieImagesAdapter = object : MovieImagesAdapter.Listener {
-        override fun onImageClicked(backdrop: Backdrop) {
-            val intent = Intent(activity, ImageActivity::class.java)
+        override fun onImageClicked(backdrops: List<Backdrop>, position: Int) {
+            val intent = Intent(activity, MovieImageActivity::class.java)
             val bundle = Bundle()
-            bundle.putParcelable(ImageActivity.ARG_BACKDROP, backdrop)
+            bundle.putParcelableArrayList(MovieImageActivity.ARG_BACKDROPS, backdrops as ArrayList<Backdrop>)
+            bundle.putInt(MovieImageActivity.ARG_SELECTED_POSITION, position)
             intent.putExtras(bundle)
             startActivity(intent)
         }

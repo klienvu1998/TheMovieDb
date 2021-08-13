@@ -1,9 +1,8 @@
-package com.hyvu.themoviedb.view
+package com.hyvu.themoviedb.view.activity
 
 import android.annotation.SuppressLint
-import android.os.Bundle
+import android.view.View
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +14,7 @@ import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
 import com.hyvu.themoviedb.di.MainComponent
 import com.hyvu.themoviedb.view.*
+import com.hyvu.themoviedb.view.base.BaseActivity
 import com.hyvu.themoviedb.viewmodel.MainViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -23,7 +23,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.You
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
@@ -37,22 +37,17 @@ class MainActivity : AppCompatActivity() {
     private var ytbPlayer: YouTubePlayer? = null
     var currentMovie: MovieDetail? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun inject() {
         mainComponent = (application as MyApplication).appComponent.mainComponent().create()
         mainComponent.inject(this)
-        super.onCreate(savedInstanceState)
+    }
+
+    override fun getLayoutId(): View {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
-        val view = mBinding.root
-        setContentView(view)
-        initView()
-        liveData()
+        return mBinding.root
     }
 
-    private fun liveData() {
-
-    }
-
-    private fun initView() {
+    override fun initView() {
         initMotionLayout()
         initTabLayoutMain()
         initYoutube()
@@ -62,6 +57,10 @@ class MainActivity : AppCompatActivity() {
             ytbPlayer?.pause()
             mBinding.motionLayout.transitionToState(R.id.hide)
         }
+    }
+
+    override fun observerLiveData() {
+
     }
 
     private fun initTabLayoutMain() {
@@ -151,8 +150,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    val homeFragment = HomeContainerFragment()
-
     private val listenerViewMainPagerAdapter = object : ViewPagerMainAdapter.Listener {
         override fun onCreateFragment(position: Int): Fragment {
             var fragment: Fragment = TikMovieFragment()
@@ -173,22 +170,17 @@ class MainActivity : AppCompatActivity() {
 
     fun showMovieDetails(movieDetail: MovieDetail) {
         this.currentMovie = movieDetail
-        supportFragmentManager.beginTransaction().replace(R.id.detail_container, MovieInfoFragment.newInstance(movieDetail)).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.detail_container, MovieInfoFragment()).commit()
         mBinding.tvTitle.text = movieDetail.title
         mBinding.motionLayout.transitionToState(R.id.show)
     }
 
     fun showComment(movieDetail: MovieDetail) {
-        supportFragmentManager.beginTransaction().add(R.id.detail_container, CommentFragment.newInstance(movieDetail)).addToBackStack(CommentFragment::class.java.simpleName).commit()
+        supportFragmentManager.beginTransaction().add(R.id.detail_container, CommentFragment()).addToBackStack(CommentFragment::class.java.simpleName).commit()
     }
 
     fun loadYtbVideo(key: String) {
         ytbPlayer?.loadVideo(key, 0f)
-    }
-
-    override fun onStop() {
-        window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        super.onStop()
     }
 
     override fun onDestroy() {

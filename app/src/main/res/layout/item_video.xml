@@ -39,7 +39,7 @@
                 android:paddingHorizontal="10dp"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"

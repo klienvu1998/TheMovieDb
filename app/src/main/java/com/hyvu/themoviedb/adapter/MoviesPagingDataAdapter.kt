@@ -12,7 +12,7 @@ import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ItemPosterBinding
 import com.hyvu.themoviedb.utils.Utils
-import com.hyvu.themoviedb.view.MainActivity
+import com.hyvu.themoviedb.view.activity.MainActivity
 
 class MoviesPagingDataAdapter(
     private val context: Context?,
@@ -31,7 +31,7 @@ class MoviesPagingDataAdapter(
         val movieDetail = getItem(position) as MovieDetail
         holder.mBinding.apply {
             tvMovieName.text = movieDetail.originalTitle
-            tvRating.text = Utils.convertVoteToRating(movieDetail.voteAverage).toString()
+            tvRating.text = movieDetail.voteAverage.toString()
             Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail.posterPath, imgPoster, R.drawable.ic_image_not_supported)
             movieContainer.setOnClickListener {
                 (context as MainActivity).showMovieDetails(movieDetail)

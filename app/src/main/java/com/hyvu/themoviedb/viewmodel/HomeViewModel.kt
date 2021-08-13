@@ -19,7 +19,7 @@ class HomeViewModel @Inject constructor(val repository: MovieRepository): ViewMo
     private val compositeDisposable = CompositeDisposable()
 
     val genres: LiveData<Genres> = repository.responseListMovieGenre
-    val listOverviewMovies: LiveData<Map<Genre, List<MovieDetail>>> = repository.responseMovieByGenre
+    val listOverviewMovies: LiveData<Pair<Genre, List<MovieDetail>>> = repository.responseMovieByGenre
     val listTrendingMovies: LiveData<TrendingMovies> = repository.responseTrendingMovies
     private val _responseMovies: MutableLiveData<PagingData<MovieDetail>> = MutableLiveData()
     val responseMovies: LiveData<PagingData<MovieDetail>> = _responseMovies

@@ -13,13 +13,12 @@
         android:name=".MyApplication"
         android:theme="@style/Theme.TheMovieDb">
         <activity
-            android:name=".view.ImageActivity"
+            android:name=".view.activity.MovieImageActivity"
             android:label="@string/title_activity_image"
             android:theme="@style/Theme.TheMovieDb.NoActionBar"></activity>
         <activity
-            android:name=".view.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait">
+            android:name=".view.activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

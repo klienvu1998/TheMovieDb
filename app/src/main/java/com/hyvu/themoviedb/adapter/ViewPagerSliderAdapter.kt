@@ -11,7 +11,7 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.api.BASE_IMG_MEDIUM_QUALITY_URL
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.utils.Utils
-import com.hyvu.themoviedb.view.MainActivity
+import com.hyvu.themoviedb.view.activity.MainActivity
 
 class ViewPagerSliderAdapter(
         private val context: Context?,

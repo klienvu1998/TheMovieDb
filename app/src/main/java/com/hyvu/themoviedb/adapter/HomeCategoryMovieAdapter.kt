@@ -11,15 +11,15 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.entity.*
 import com.hyvu.themoviedb.databinding.ItemBannerBinding
 import com.hyvu.themoviedb.databinding.ItemCategoryBinding
-import com.hyvu.themoviedb.view.MainActivity
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class HomeCategoryMovieAdapter(
     private val context: Context?,
     private val listener: Listener,
-    private var mapMovieCategories: Map<Genre, List<MovieDetail>>,
+    private var mapMovieCategories: LinkedHashMap<Genre, List<MovieDetail>>,
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+    private val viewPool = RecyclerView.RecycledViewPool()
     companion object {
         const val TRENDING_CATEGORY = 0
         const val MOVIE_BY_GENRE = 1
@@ -30,9 +30,9 @@ class HomeCategoryMovieAdapter(
         fun onClickedTrending()
     }
 
-    fun setMovieCategoryData(data: Map<Genre, List<MovieDetail>>) {
-        this.mapMovieCategories = data
-        notifyDataSetChanged()
+    fun addMovieData(data: Pair<Genre, List<MovieDetail>>) {
+        this.mapMovieCategories[data.first] = data.second
+        notifyItemInserted(this.mapMovieCategories.keys.size - 1)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -93,9 +93,10 @@ class HomeCategoryMovieAdapter(
             val genre = mapMovieCategories.keys.toList()[position]
             (holderMovieByGenre as MovieByGenreViewHolder).mBinding.apply {
                 tvCategoryName.text = genre.name
-                rcvMovie.layoutManager = LinearLayoutManager(holderMovieByGenre.itemView.context, LinearLayoutManager.HORIZONTAL, false)
+                rcvMovie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 val adapter = HomeCategoryMovieChildAdapter(context, mapMovieCategories[genre], childListener)
                 rcvMovie.adapter = adapter
+                rcvMovie.setRecycledViewPool(viewPool)
                 holderMovieByGenre.mBinding.containerSeeAll.setOnClickListener {
                     listener.onClickedSeeAll(genre)
                 }

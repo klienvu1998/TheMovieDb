@@ -8,27 +8,21 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.api.BASE_IMG_HIGH_QUALITY_URL
 import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
-import com.hyvu.themoviedb.data.api.BASE_IMG_MEDIUM_QUALITY_URL
 import com.hyvu.themoviedb.data.entity.Genres
 import com.hyvu.themoviedb.data.entity.MovieDetail
-import com.hyvu.themoviedb.data.entity.TikMovie
-import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.databinding.ItemTikmovieBinding
 import com.hyvu.themoviedb.utils.Utils
-import com.hyvu.themoviedb.view.MainActivity
+import com.hyvu.themoviedb.view.activity.MainActivity
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
-import java.util.*
 
-class TikMoviePagingViewPagerAdapter(
+class TikMoviePagingDataAdapter(
         private val context: Context?,
         private val listener: Listener,
         private val listMovieGenre: Genres
-): PagingDataAdapter<MovieDetail, TikMoviePagingViewPagerAdapter.ViewHolder>(REPO_COMPARATOR) {
+): PagingDataAdapter<MovieDetail, TikMoviePagingDataAdapter.ViewHolder>(REPO_COMPARATOR) {
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<MovieDetail>() {

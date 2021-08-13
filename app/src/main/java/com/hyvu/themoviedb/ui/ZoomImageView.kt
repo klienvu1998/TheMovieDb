@@ -92,14 +92,19 @@ class ZoomImageView: AppCompatImageView {
     private var touchImageViewListener: OnTouchImageViewListener? = null
 
     private var orientationJustChanged = false
+    private var mContext: Context? = null
 
     interface OnTouchImageViewListener {
         fun onMove()
     }
 
     constructor(context: Context) : super(context)
-    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         if (attrs != null) {
             configureImageView(context, attrs, defStyleAttr)
         }
@@ -108,6 +113,7 @@ class ZoomImageView: AppCompatImageView {
     @SuppressLint("ClickableViewAccessibility")
     private fun configureImageView(context: Context, attrs: AttributeSet, defStyleAttr: Int) {
         super.setClickable(true)
+        mContext = context
         orientation = resources.configuration.orientation
         mScaleDetector = ScaleGestureDetector(context, ScaleListener())
         mGestureDetector = GestureDetector(context, GestureListener())
@@ -315,7 +321,12 @@ class ZoomImageView: AppCompatImageView {
         onDrawReady = true
         imageRenderedAtLeastOnce = true
         if (delayedZoomVariables != null) {
-            setZoom(delayedZoomVariables!!.scale, delayedZoomVariables!!.focusX, delayedZoomVariables!!.focusY, delayedZoomVariables!!.scaleType)
+            setZoom(
+                delayedZoomVariables!!.scale,
+                delayedZoomVariables!!.focusX,
+                delayedZoomVariables!!.focusY,
+                delayedZoomVariables!!.scaleType
+            )
             delayedZoomVariables = null
         }
         super.onDraw(canvas)
@@ -768,14 +779,30 @@ class ZoomImageView: AppCompatImageView {
             //
             val prevActualWidth = prevMatchViewWidth * normalizedScale
             val actualWidth = getImageWidth()
-            m[Matrix.MTRANS_X] = newTranslationAfterChange(transX, prevActualWidth, actualWidth, prevViewWidth, viewWidth, drawableWidth, fixedPixel)
+            m[Matrix.MTRANS_X] = newTranslationAfterChange(
+                transX,
+                prevActualWidth,
+                actualWidth,
+                prevViewWidth,
+                viewWidth,
+                drawableWidth,
+                fixedPixel
+            )
 
             //
             // Y position
             //
             val prevActualHeight = prevMatchViewHeight * normalizedScale
             val actualHeight = getImageHeight()
-            m[Matrix.MTRANS_Y] = newTranslationAfterChange(transY, prevActualHeight, actualHeight, prevViewHeight, viewHeight, drawableHeight, fixedPixel)
+            m[Matrix.MTRANS_Y] = newTranslationAfterChange(
+                transY,
+                prevActualHeight,
+                actualHeight,
+                prevViewHeight,
+                viewHeight,
+                drawableHeight,
+                fixedPixel
+            )
 
             //
             // Set the matrix to the adjusted scale and translation values.
@@ -818,7 +845,15 @@ class ZoomImageView: AppCompatImageView {
      * @param drawableSize         width/height of drawable
      * @param sizeChangeFixedPixel how we should choose the fixed pixel
      */
-    private fun newTranslationAfterChange(trans: Float, prevImageSize: Float, imageSize: Float, prevViewSize: Float, viewSize: Float, drawableSize: Int, sizeChangeFixedPixel: FixedPixel): Float {
+    private fun newTranslationAfterChange(
+        trans: Float,
+        prevImageSize: Float,
+        imageSize: Float,
+        prevViewSize: Float,
+        viewSize: Float,
+        drawableSize: Int,
+        sizeChangeFixedPixel: FixedPixel
+    ): Float {
         return if (imageSize < viewSize) {
             //
             // The width/height of image is less than the view's width/height. Center it.
@@ -1044,7 +1079,12 @@ class ZoomImageView: AppCompatImageView {
         }
     }
 
-    private fun scaleImage(deltaScale: Double, focusX: Float, focusY: Float, stretchImageToSuper: Boolean) {
+    private fun scaleImage(
+        deltaScale: Double,
+        focusX: Float,
+        focusY: Float,
+        stretchImageToSuper: Boolean
+    ) {
         var tDeltaScale = deltaScale
         val lowerScale: Float
         val upperScale: Float
@@ -1074,7 +1114,12 @@ class ZoomImageView: AppCompatImageView {
      *
      * @author Ortiz
      */
-    private inner class DoubleTapZoom internal constructor(targetZoom: Float, focusX: Float, focusY: Float, stretchImageToSuper: Boolean) : Runnable {
+    private inner class DoubleTapZoom internal constructor(
+        targetZoom: Float,
+        focusX: Float,
+        focusY: Float,
+        stretchImageToSuper: Boolean
+    ) : Runnable {
         private val startTime: Long
         private val startZoom: Float
         private val targetZoom: Float
@@ -1227,10 +1272,40 @@ class ZoomImageView: AppCompatImageView {
      *
      * @author Ortiz
      */
-    private inner class Fling internal constructor(velocityX: Int, velocityY: Int) : Runnable {
+    private inner class Fling: Runnable {
         var scroller: CompatScroller?
         var currX: Int
         var currY: Int
+
+        constructor(velocityX: Int, velocityY: Int) {
+            setState(State.FLING)
+            scroller = CompatScroller(mContext)
+            matrix.getValues(m)
+            val startX = m[Matrix.MTRANS_X].toInt()
+            val startY = m[Matrix.MTRANS_Y].toInt()
+            val minX: Int
+            val maxX: Int
+            val minY: Int
+            val maxY: Int
+            if (getImageWidth() > viewWidth) {
+                minX = (viewWidth - getImageWidth().toInt()).toInt()
+                maxX = 0
+            } else {
+                maxX = startX
+                minX = maxX
+            }
+            if (getImageHeight() > viewHeight) {
+                minY = (viewHeight - getImageHeight().toInt()).toInt()
+                maxY = 0
+            } else {
+                maxY = startY
+                minY = maxY
+            }
+            scroller!!.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY)
+            currX = startX
+            currY = startY
+        }
+
         fun cancelFling() {
             if (scroller != null) {
                 setState(State.NONE)
@@ -1264,42 +1339,22 @@ class ZoomImageView: AppCompatImageView {
                 compatPostOnAnimation(this)
             }
         }
-
-        init {
-            setState(State.FLING)
-            scroller = CompatScroller(context)
-            currentMatrix?.getValues(m)
-            val startX = m.get(Matrix.MTRANS_X).toInt()
-            val startY = m.get(Matrix.MTRANS_Y).toInt()
-            val minX: Int
-            val maxX: Int
-            val minY: Int
-            val maxY: Int
-            if (getImageWidth() > viewWidth) {
-                minX = (viewWidth - getImageWidth()).toInt()
-                maxX = 0
-            } else {
-                maxX = startX
-                minX = maxX
-            }
-            if (getImageHeight() > viewHeight) {
-                minY = (viewHeight - getImageHeight()).toInt()
-                maxY = 0
-            } else {
-                maxY = startY
-                minY = maxY
-            }
-            scroller!!.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY)
-            currX = startX
-            currY = startY
-        }
     }
 
     @TargetApi(VERSION_CODES.GINGERBREAD)
     private class CompatScroller constructor(context: Context?) {
         var scroller: Scroller? = null
         var overScroller: OverScroller
-        fun fling(startX: Int, startY: Int, velocityX: Int, velocityY: Int, minX: Int, maxX: Int, minY: Int, maxY: Int) {
+        fun fling(
+            startX: Int,
+            startY: Int,
+            velocityX: Int,
+            velocityY: Int,
+            minX: Int,
+            maxX: Int,
+            minY: Int,
+            maxY: Int
+        ) {
             overScroller.fling(startX, startY, velocityX, velocityY, minX, maxX, minY, maxY)
         }
 
@@ -1330,11 +1385,19 @@ class ZoomImageView: AppCompatImageView {
         postOnAnimation(runnable)
     }
 
-    private class ZoomVariables internal constructor(var scale: Float, var focusX: Float, var focusY: Float, var scaleType: ScaleType)
+    private class ZoomVariables internal constructor(
+        var scale: Float,
+        var focusX: Float,
+        var focusY: Float,
+        var scaleType: ScaleType
+    )
 
     private fun printMatrixInfo() {
         val n = FloatArray(9)
         currentMatrix?.getValues(n)
-        Log.d(TAG, "Scale: " + n[Matrix.MSCALE_X] + " TransX: " + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y])
+        Log.d(
+            TAG,
+            "Scale: " + n[Matrix.MSCALE_X] + " TransX: " + n[Matrix.MTRANS_X] + " TransY: " + n[Matrix.MTRANS_Y]
+        )
     }
 }

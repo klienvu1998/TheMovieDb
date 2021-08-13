@@ -15,4 +15,5 @@ interface AppComponent {
         fun create(@BindsInstance context: Context): AppComponent
     }
     fun mainComponent(): MainComponent.Factory
+    fun imageComponent(): ImageComponent.Factory
 }

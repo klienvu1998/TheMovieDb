@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/white"
     app:layoutDescription="@xml/activity_main_scene"
-    tools:context=".view.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
     <LinearLayout
         android:id="@+id/tool_bar"

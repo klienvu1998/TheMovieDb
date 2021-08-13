@@ -10,13 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.hyvu.themoviedb.R
-import com.hyvu.themoviedb.adapter.TikMoviePagingViewPagerAdapter
+import com.hyvu.themoviedb.adapter.TikMoviePagingDataAdapter
 import com.hyvu.themoviedb.databinding.FragmentTikmovieBinding
+import com.hyvu.themoviedb.view.activity.MainActivity
+import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.TikMovieViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import javax.inject.Inject
 
-class TikMovieFragment : Fragment() {
+class TikMovieFragment : BaseFragment() {
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
@@ -24,49 +26,44 @@ class TikMovieFragment : Fragment() {
     private val mViewModel by lazy {
         ViewModelProvider(this, providerFactory).get(TikMovieViewModel::class.java)
     }
-    private var tikMoviePagingViewPagerAdapter: TikMoviePagingViewPagerAdapter? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity as MainActivity).mainComponent.inject(this)
-    }
+    private var tikMoviePagingDataAdapter: TikMoviePagingDataAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentTikmovieBinding.bind(inflater.inflate(R.layout.fragment_tikmovie, container, false))
-        getData()
         return mBinding.root
     }
 
-    private fun getData() {
-        mViewModel.fetchLatestMovie()
+    override fun inject() {
+        (activity as MainActivity).mainComponent.inject(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun getBundle() {
+
+    }
+
+    override fun fetchData() {
         mViewModel.fetchTikMovie()
-        initView()
-        liveData()
     }
 
-    private fun initView() {
+    override fun initView() {
         mBinding.rcvMovie.apply {
-            tikMoviePagingViewPagerAdapter = mViewModel.movieGenres.value?.let { TikMoviePagingViewPagerAdapter(context, listenerTikMovieViewPagerAdapter, it) }
+            tikMoviePagingDataAdapter = mViewModel.movieGenres.value?.let { TikMoviePagingDataAdapter(context, listenerTikMovieViewPagerAdapter, it) }
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             PagerSnapHelper().attachToRecyclerView(this)
-            adapter = tikMoviePagingViewPagerAdapter
+            adapter = tikMoviePagingDataAdapter
         }
     }
 
-    private fun liveData() {
+    override fun observerLiveData() {
         mViewModel.tikMovieDetails.observe(viewLifecycleOwner, { tikMovie ->
-            tikMoviePagingViewPagerAdapter?.submitData(lifecycle, tikMovie)
+            tikMoviePagingDataAdapter?.submitData(lifecycle, tikMovie)
         })
     }
 
-    private val listenerTikMovieViewPagerAdapter = object : TikMoviePagingViewPagerAdapter.Listener {
+    private val listenerTikMovieViewPagerAdapter = object : TikMoviePagingDataAdapter.Listener {
 
     }
 }

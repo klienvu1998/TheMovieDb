@@ -17,23 +17,13 @@ import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.entity.MovieFullDetails
 import com.hyvu.themoviedb.databinding.FragmentMovieInfoBinding
 import com.hyvu.themoviedb.utils.Utils
+import com.hyvu.themoviedb.view.activity.MainActivity
+import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.MovieInfoViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import javax.inject.Inject
 
-class MovieInfoFragment: Fragment() {
-
-    companion object {
-        const val ARG_MOVIE_ID = "ARG_MOVIE_ID"
-
-        fun newInstance(movieDetail: MovieDetail): MovieInfoFragment {
-            val f = MovieInfoFragment()
-            val arg = Bundle()
-            arg.putParcelable(ARG_MOVIE_ID, movieDetail)
-            f.arguments = arg
-            return f
-        }
-    }
+class MovieInfoFragment: BaseFragment() {
     @Inject
     lateinit var providerFactory: MainViewModelFactory
 
@@ -44,38 +34,37 @@ class MovieInfoFragment: Fragment() {
     }
     private lateinit var viewPagerDetailMainAdapter: ViewPagerInfoAdapter
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        (activity as MainActivity).mainComponent.inject(this)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val v = inflater.inflate(R.layout.fragment_movie_info, container, false)
         mBinding = FragmentMovieInfoBinding.bind(v)
-        movieDetail = arguments?.getParcelable(ARG_MOVIE_ID)!!
         return mBinding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun inject() {
+        (activity as MainActivity).mainComponent.inject(this)
+    }
+
+    override fun getBundle() {
+        movieDetail = (activity as MainActivity).currentMovie!!
+    }
+
+    override fun fetchData() {
         mViewModel.fetchMovieDetails(movieDetail.id)
-        initView()
-        liveData()
     }
 
-    private fun liveData() {
-        mViewModel.movieFullDetails.observe(viewLifecycleOwner, { movieDetails ->
-            setupLayoutForDetailScreen(movieDetails)
-            initTabLayoutDetail()
-        })
-    }
-
-    private fun initView() {
+    override fun initView() {
         mBinding.progressBarLoadingDetail.visibility = View.VISIBLE
         mBinding.viewPagerDetail.isUserInputEnabled = false
         mBinding.btnComment.setOnClickListener {
             (context as MainActivity).showComment(movieDetail)
         }
+        initTabLayoutDetail()
+    }
+
+    override fun observerLiveData() {
+        mViewModel.movieFullDetails.observe(viewLifecycleOwner, { movieDetails ->
+            setupLayoutForDetailScreen(movieDetails)
+        })
     }
 
     private fun initTabLayoutDetail() {
@@ -101,7 +90,7 @@ class MovieInfoFragment: Fragment() {
                     fragment = DetailFragment()
                 }
                 1 -> {
-                    fragment = CastFragment.newInstance(movieDetail.id)
+                    fragment = CastFragment()
                 }
             }
             return fragment

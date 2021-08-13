@@ -3,7 +3,6 @@
     android:layout_width="110dp"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:layout_gravity="center"
     android:id="@+id/movie_container"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
@@ -15,8 +14,9 @@
         android:padding="10dp"
         app:layout_constraintDimensionRatio="H,1:1.5"
         android:background="@color/black"
-        android:adjustViewBounds="true"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/tv_movie_name"

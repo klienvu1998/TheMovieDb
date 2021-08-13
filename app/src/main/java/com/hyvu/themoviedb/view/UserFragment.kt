@@ -7,12 +7,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hyvu.themoviedb.R
+import com.hyvu.themoviedb.view.activity.MainActivity
+import com.hyvu.themoviedb.view.base.BaseFragment
 
-class UserFragment : Fragment() {
+class UserFragment : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+    }
+
+    override fun inject() {
         (activity as MainActivity).mainComponent.inject(this)
+    }
+
+    override fun getBundle() {
+
+    }
+
+    override fun fetchData() {
+
+    }
+
+    override fun initView() {
+
+    }
+
+    override fun observerLiveData() {
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

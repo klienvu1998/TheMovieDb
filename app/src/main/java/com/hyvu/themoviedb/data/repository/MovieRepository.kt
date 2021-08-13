@@ -38,8 +38,8 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI) {
     private val _responseListMovieGenre: MutableLiveData<Genres> = MutableLiveData()
     val responseListMovieGenre: LiveData<Genres> = _responseListMovieGenre
 
-    private val _responseMovieByGenre: MutableLiveData<Map<Genre, List<MovieDetail>>> = MutableLiveData()
-    val responseMovieByGenre: LiveData<Map<Genre, List<MovieDetail>>> = _responseMovieByGenre
+    private val _responseMovieByGenre: MutableLiveData<Pair<Genre, List<MovieDetail>>> = MutableLiveData()
+    val responseMovieByGenre: LiveData<Pair<Genre, List<MovieDetail>>> = _responseMovieByGenre
 
     private val _responseTrendingMovies: MutableLiveData<TrendingMovies> = MutableLiveData()
     val responseTrendingMovies: LiveData<TrendingMovies> = _responseTrendingMovies
@@ -97,7 +97,6 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI) {
 
     fun fetchHomeListMovieByGenres() {
         var i = 0
-        val map = LinkedHashMap<Genre, List<MovieDetail>>()
         compositeDisposable.add(
                 apiService.getListGenres()
                         .subscribeOn(Schedulers.io())
@@ -112,8 +111,7 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI) {
                                     .subscribeOn(Schedulers.io())
                                     .observeOn(AndroidSchedulers.mainThread())
                                     .subscribe({ movies ->
-                                        map[data.genres[i++]] = movies.movieDetails
-                                        _responseMovieByGenre.postValue(map)
+                                        _responseMovieByGenre.postValue(data.genres[i++] to movies.movieDetails )
                                     }, { e ->
                                         e.printStackTrace()
                                     }, {

@@ -4,6 +4,7 @@ import com.hyvu.themoviedb.di.module.MainViewModelModule
 import com.hyvu.themoviedb.di.scope.ActivityScope
 import com.hyvu.themoviedb.view.*
 import com.hyvu.themoviedb.view.activity.MainActivity
+import com.hyvu.themoviedb.view.UserSettingsFragment
 import dagger.Subcomponent
 
 @ActivityScope
@@ -25,4 +26,5 @@ interface MainComponent {
     fun inject(fragment: MoviesHomeFragment)
     fun inject(fragment: TikMovieFragment)
     fun inject(fragment: UserFragment)
+    fun inject(fragment: UserSettingsFragment)
 }

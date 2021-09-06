@@ -3,11 +3,17 @@ package com.hyvu.themoviedb.data.api
 import com.hyvu.themoviedb.data.entity.*
 import io.reactivex.Observable
 import io.reactivex.Single
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface TheMovieDbAPI {
+
+    @GET("authentication/token/new")
+    fun getAuthenticateToken(): Single<AuthenticateToken>
+
+    @POST("authentication/session/new")
+    fun getSessionID(
+        @Body body: HashMap<String, Any>
+    ): Single<Session>
 
     @GET("movie/popular")
     fun getPopularMovie(

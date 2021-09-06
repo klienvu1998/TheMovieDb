@@ -51,7 +51,7 @@ class CastFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.movieCredits.observe(viewLifecycleOwner, { credits ->
+        mViewModel.movieCredits.observe(this, { credits ->
             mBinding.rcvCast.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                 adapter = MovieCreditAdapter(context, credits)

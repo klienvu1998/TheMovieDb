@@ -2,14 +2,12 @@ package com.hyvu.themoviedb.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hyvu.themoviedb.di.scope.ActivityScope
 import com.hyvu.themoviedb.di.scope.ViewModelKey
 import com.hyvu.themoviedb.viewmodel.*
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import javax.inject.Singleton
 
 @Module
 abstract class MainViewModelModule {
@@ -41,4 +39,9 @@ abstract class MainViewModelModule {
     @IntoMap
     @ViewModelKey(CommentViewModel::class)
     abstract fun provideCommentViewModel(viewModel: CommentViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CategoryMoviesViewModel::class)
+    abstract fun provideMovieByGenreViewModel(viewModel: CategoryMoviesViewModel): ViewModel
 }

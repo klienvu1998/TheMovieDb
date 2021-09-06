@@ -19,7 +19,7 @@
         android:ellipsize="end"
         android:textSize="12sp"
         android:gravity="center_horizontal"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorSecondary"
         tools:text="Vin Diesel"/>
 
     <TextView
@@ -30,7 +30,7 @@
         android:ellipsize="end"
         android:textSize="14sp"
         android:gravity="center_horizontal"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorSecondary"
         tools:text="Vin Diesel"/>
 
 </LinearLayout>

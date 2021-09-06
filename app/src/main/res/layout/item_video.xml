@@ -16,7 +16,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="?attr/colorPrimary">
 
             <ImageView
                 android:id="@+id/img_slide"
@@ -39,7 +40,7 @@
                 android:paddingHorizontal="10dp"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:gravity="center_horizontal"

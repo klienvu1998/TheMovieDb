@@ -6,27 +6,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/white"
+    android:background="?attr/colorPrimary"
     app:layoutDescription="@xml/activity_main_scene"
     tools:context=".view.activity.MainActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:gravity="center"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="200dp"
+            android:layout_width="230dp"
             android:layout_height="20dp"
             android:background="@drawable/ic_logo_the_movie"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toTopOf="@id/tool_bar"
+            app:layout_constraintBottom_toBottomOf="@id/tool_bar"
+            app:layout_constraintStart_toStartOf="@id/tool_bar"
             android:scaleType="fitCenter" />
+        
+        <ImageView
+            android:id="@+id/btn_user_setting"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_user"
+            android:scaleType="fitXY"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/tool_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/tool_bar"
+            app:tint="?attr/colorSecondary"/>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_container"
@@ -39,7 +55,7 @@
         android:id="@+id/youtube_view_container"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="@id/tab_layout">
 
         <Button
@@ -55,7 +71,7 @@
         android:layout_height="0dp"
         android:textSize="17sp"
         android:paddingHorizontal="10dp"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorSecondary"
         android:gravity="center_vertical"
         android:scrollHorizontally="true"
         android:ellipsize="marquee"
@@ -101,8 +117,16 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
+        android:background="?attr/colorPrimary"
         android:visibility="visible"
+        app:tabTextColor="?attr/colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/user_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="parent"/>
 
 </com.hyvu.themoviedb.ui.MyMotionLayout>

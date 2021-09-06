@@ -38,6 +38,29 @@
         motion:duration="100">
     </Transition>
 
+    <Transition
+        motion:constraintSetEnd="@id/user_setting"
+        motion:constraintSetStart="@+id/hide"
+        motion:duration="500" >
+        <OnClick motion:clickAction="transitionToEnd"
+            motion:targetId="@+id/btn_user_setting"/>
+    </Transition>
+
+    <Transition
+        motion:constraintSetEnd="@id/user_setting"
+        motion:constraintSetStart="@id/card"
+        motion:duration="500">
+        <OnClick motion:clickAction="transitionToEnd"
+            motion:targetId="@+id/btn_user_setting"/>
+    </Transition>
+
+    <ConstraintSet android:id="@+id/user_setting">
+        <Constraint android:id="@id/user_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            motion:layout_constraintTop_toTopOf="parent"/>
+    </ConstraintSet>
+
     <ConstraintSet android:id="@+id/ytb_fullscreen">
         <Constraint
             android:id="@+id/youtube_view_container"

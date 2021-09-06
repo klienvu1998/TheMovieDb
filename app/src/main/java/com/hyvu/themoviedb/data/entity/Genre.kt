@@ -3,11 +3,19 @@ package com.hyvu.themoviedb.data.entity
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "genre")
 data class Genre(
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     @SerializedName("id")
     val id: Int? = null,
+
+    @ColumnInfo(name = "name")
     @SerializedName("name")
     val name: String
 ) : Parcelable {

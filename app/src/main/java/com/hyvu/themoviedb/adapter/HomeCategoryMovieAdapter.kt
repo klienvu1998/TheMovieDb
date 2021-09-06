@@ -32,7 +32,7 @@ class HomeCategoryMovieAdapter(
 
     fun addMovieData(data: Pair<Genre, List<MovieDetail>>) {
         this.mapMovieCategories[data.first] = data.second
-        notifyItemInserted(this.mapMovieCategories.keys.size - 1)
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -54,7 +54,6 @@ class HomeCategoryMovieAdapter(
             else -> MovieByGenreViewHolder(parent)
         }
     }
-
 
     override fun getItemCount(): Int {
         return this.mapMovieCategories.keys.size

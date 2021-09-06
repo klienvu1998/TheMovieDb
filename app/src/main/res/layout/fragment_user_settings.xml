@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_weight="2"
+    tools:context=".view.UserSettingsFragment">
+
+    <include layout="@layout/layout_tool_bar"
+        android:id="@+id/tool_bar_container"/>
+
+    <LinearLayout
+        android:id="@+id/sign_in_suggest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:src="@drawable/bg_login" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Do more with TheMovieDB"
+            android:textColor="?attr/colorSecondary"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="50dp"
+            android:textSize="12sp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:text="@string/sign_in_now_to_favorite_create_watchlist_on_videos"/>
+
+        <TextView
+            android:id="@+id/btn_sign_in"
+            android:layout_width="@dimen/btn_width"
+            android:layout_height="@dimen/btn_height"
+            android:text="SIGN IN"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="?attr/colorPrimary"
+            android:background="@drawable/color_green_to_blue"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="10dp"
+        android:layout_height="50dp">
+
+        <ImageView
+            android:id="@+id/img_theme"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_theme"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dark Theme"
+            android:layout_marginStart="10dp"
+            android:textSize="15sp"
+            android:textColor="?attr/colorSecondary"
+            app:layout_constraintTop_toTopOf="@id/img_theme"
+            app:layout_constraintBottom_toBottomOf="@id/img_theme"
+            app:layout_constraintStart_toEndOf="@id/img_theme"/>
+
+        <Switch
+            android:id="@+id/sw_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/img_theme"
+            app:layout_constraintBottom_toBottomOf="@id/img_theme"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/logged_in_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/btn_user_sign_out"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="10dp"
+            android:layout_height="50dp">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_logout" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sign_out"
+                android:layout_marginStart="10dp"
+                android:textSize="15sp"
+                android:textColor="?attr/colorSecondary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

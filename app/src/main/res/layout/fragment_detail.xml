@@ -26,14 +26,14 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorSecondary"
                     android:text="Product Companies: "/>
 
                 <TextView
                     android:id="@+id/tv_product_company"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:textColor="?attr/colorSecondary"
                     android:textSize="14sp"/>
 
             </LinearLayout>
@@ -44,7 +44,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorSecondary"
                 android:text="Overview:"/>
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="@color/black"/>
+                android:textColor="?attr/colorSecondary"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -61,7 +61,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="?attr/colorSecondary"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_more_videos"
@@ -77,7 +77,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"/>
+                android:textColor="?attr/colorSecondary"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_more_images"

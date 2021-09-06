@@ -1,11 +1,13 @@
 package com.hyvu.themoviedb.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.adapter.HomeCategoryMovieAdapter
 import com.hyvu.themoviedb.data.entity.Genre
@@ -64,14 +66,15 @@ class MoviesHomeFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.genres.observe(viewLifecycleOwner, {
+        mViewModel.genres.observe(this, {
         })
-        mViewModel.listOverviewMovies.observe(viewLifecycleOwner, { data ->
+        mViewModel.listOverviewMovies.observe(this, { data ->
+            data.second.forEach { mViewModel.insertMovieDetailToDatabase(it) }
             mBinding.progressBar.visibility = View.GONE
             listMovieCategory[data.first] = data.second
             adapterHomeCategoryMovie?.addMovieData(data)
         })
-        mViewModel.listTrendingMovies.observe(viewLifecycleOwner, {trendingMovies ->
+        mViewModel.listTrendingMovies.observe(this, {trendingMovies ->
             if (trendingMovies != null && trendingMovies.trendingMovies.isNotEmpty()) {
                 mViewModel.fetchHomeListMovieByGenres()
                 listMovieCategory[Genre(-1, TRENDING_MOVIE)] = trendingMovies.trendingMovies.map { it.convertToMovieDetail() }
@@ -93,5 +96,10 @@ class MoviesHomeFragment : BaseFragment() {
                     ?.addToBackStack(MoviesByGenreFragment::class.java.simpleName)
                     ?.commit()
         }
+    }
+
+    override fun onDestroyView() {
+        context?.let { Glide.get(it).clearMemory() }
+        super.onDestroyView()
     }
 }

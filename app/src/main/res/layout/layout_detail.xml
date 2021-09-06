@@ -20,6 +20,7 @@
         app:layout_constraintBottom_toBottomOf="@id/img_poster"
         app:layout_constraintStart_toEndOf="@id/img_poster"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="?attr/colorPrimary"
         android:paddingHorizontal="10dp"
         android:gravity="center_vertical"
         android:orientation="vertical">
@@ -38,7 +39,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:textStyle="bold"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorSecondary"
             android:textSize="25sp"
             tools:text="Avenger"/>
 
@@ -52,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Release Date: "
-                android:textColor="@color/black"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textSize="15sp" />
 
@@ -61,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12/12/2020"
-                android:textColor="@color/black"
+                android:textColor="?attr/colorSecondary"
                 app:layout_constraintTop_toTopOf="parent"
                 android:textSize="15sp" />
 
@@ -86,6 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:textColor="?attr/colorSecondary"
                 android:textSize="12sp"
                 tools:text="100"/>
 

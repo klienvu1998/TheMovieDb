@@ -13,7 +13,7 @@ import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.databinding.FragmentMoviesByGenreBinding
 import com.hyvu.themoviedb.view.activity.MainActivity
 import com.hyvu.themoviedb.view.base.BaseFragment
-import com.hyvu.themoviedb.viewmodel.HomeViewModel
+import com.hyvu.themoviedb.viewmodel.CategoryMoviesViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class MoviesByGenreFragment : BaseFragment() {
     @Inject
     lateinit var providerFactory: MainViewModelFactory
     private val mViewModel by lazy {
-        ViewModelProvider(this, providerFactory)[HomeViewModel::class.java]
+        ViewModelProvider(this, providerFactory)[CategoryMoviesViewModel::class.java]
     }
 
     private lateinit var genre: Genre
@@ -58,7 +58,7 @@ class MoviesByGenreFragment : BaseFragment() {
     }
 
     override fun fetchData() {
-        mViewModel.getMoviesPerPage(genre.id ?: 0)
+        mViewModel.getMoviesPerPage(genre.id ?: -1)
     }
 
     override fun initView() {
@@ -83,7 +83,7 @@ class MoviesByGenreFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.responseMovies.observe(viewLifecycleOwner, { pagingData ->
+        mViewModel.responseMovies.observe(this, { pagingData ->
             moviePagingDataAdapter?.submitData(lifecycle, pagingData)
         })
     }

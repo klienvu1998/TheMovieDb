@@ -6,11 +6,11 @@ import dagger.Subcomponent
 
 @ActivityScope
 @Subcomponent()
-interface ImageComponent {
+interface MovieImageComponent {
 
     @Subcomponent.Factory
     interface Factory {
-        fun create(): ImageComponent
+        fun create(): MovieImageComponent
     }
 
     fun inject(movieImageActivity: MovieImageActivity)

@@ -58,7 +58,7 @@ class TikMovieFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.tikMovieDetails.observe(viewLifecycleOwner, { tikMovie ->
+        mViewModel.tikMovieDetails.observe(this, { tikMovie ->
             tikMoviePagingDataAdapter?.submitData(lifecycle, tikMovie)
         })
     }

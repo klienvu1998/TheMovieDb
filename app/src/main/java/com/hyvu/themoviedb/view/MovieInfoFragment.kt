@@ -56,13 +56,13 @@ class MovieInfoFragment: BaseFragment() {
         mBinding.progressBarLoadingDetail.visibility = View.VISIBLE
         mBinding.viewPagerDetail.isUserInputEnabled = false
         mBinding.btnComment.setOnClickListener {
-            (context as MainActivity).showComment(movieDetail)
+            (context as MainActivity).showComment()
         }
         initTabLayoutDetail()
     }
 
     override fun observerLiveData() {
-        mViewModel.movieFullDetails.observe(viewLifecycleOwner, { movieDetails ->
+        mViewModel.movieFullDetails.observe(this, { movieDetails ->
             setupLayoutForDetailScreen(movieDetails)
         })
     }

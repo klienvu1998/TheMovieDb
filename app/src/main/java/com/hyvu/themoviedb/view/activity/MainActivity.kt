@@ -13,8 +13,10 @@ import com.hyvu.themoviedb.adapter.ViewPagerMainAdapter
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
 import com.hyvu.themoviedb.di.MainComponent
+import com.hyvu.themoviedb.user.UserManager
 import com.hyvu.themoviedb.view.*
 import com.hyvu.themoviedb.view.base.BaseActivity
+import com.hyvu.themoviedb.view.UserSettingsFragment
 import com.hyvu.themoviedb.viewmodel.MainViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -24,6 +26,10 @@ import javax.inject.Inject
 
 
 class MainActivity : BaseActivity() {
+
+    val userManager: UserManager by lazy {
+        (application as MyApplication).userManager
+    }
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
@@ -36,6 +42,14 @@ class MainActivity : BaseActivity() {
     private lateinit var viewPagerMainMainAdapter: ViewPagerMainAdapter
     private var ytbPlayer: YouTubePlayer? = null
     var currentMovie: MovieDetail? = null
+
+    override fun getBundle() {
+
+    }
+
+    override fun fetchData() {
+
+    }
 
     override fun inject() {
         mainComponent = (application as MyApplication).appComponent.mainComponent().create()
@@ -51,12 +65,19 @@ class MainActivity : BaseActivity() {
         initMotionLayout()
         initTabLayoutMain()
         initYoutube()
+        initUserSettings()
         mBinding.tvTitle.isSelected = true
         mBinding.viewPagerContainer.isUserInputEnabled = false
         mBinding.btnClose.setOnClickListener {
             ytbPlayer?.pause()
             mBinding.motionLayout.transitionToState(R.id.hide)
         }
+    }
+
+    private fun initUserSettings() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.user_fragment_container, UserSettingsFragment())
+            .commit()
     }
 
     override fun observerLiveData() {
@@ -169,13 +190,14 @@ class MainActivity : BaseActivity() {
     }
 
     fun showMovieDetails(movieDetail: MovieDetail) {
+        ytbPlayer?.cueVideo("", 0f)
         this.currentMovie = movieDetail
         supportFragmentManager.beginTransaction().replace(R.id.detail_container, MovieInfoFragment()).commit()
         mBinding.tvTitle.text = movieDetail.title
         mBinding.motionLayout.transitionToState(R.id.show)
     }
 
-    fun showComment(movieDetail: MovieDetail) {
+    fun showComment() {
         supportFragmentManager.beginTransaction().add(R.id.detail_container, CommentFragment()).addToBackStack(CommentFragment::class.java.simpleName).commit()
     }
 
@@ -198,7 +220,12 @@ class MainActivity : BaseActivity() {
                 mBinding.motionLayout.transitionToState(R.id.hide)
                 return
             }
+            R.id.user_setting -> {
+                mBinding.motionLayout.transitionToStart()
+                return
+            }
         }
+        if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
         super.onBackPressed()
     }
 

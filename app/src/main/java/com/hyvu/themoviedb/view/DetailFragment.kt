@@ -1,9 +1,7 @@
 package com.hyvu.themoviedb.view
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +52,7 @@ class DetailFragment : BaseFragment() {
     }
 
     override fun getBundle() {
-        movieDetail = (context as MainActivity).currentMovie!!
+        movieDetail = (activity as MainActivity).currentMovie!!
     }
 
     override fun initView() {
@@ -71,7 +69,7 @@ class DetailFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.movieFullDetails.observe(viewLifecycleOwner, { movieDetails ->
+        mViewModel.movieFullDetails.observe(this, { movieDetails ->
             mBinding.tvContent.text = movieDetails.overview
             var companiesName = if (movieDetails.productionCompanies.isNotEmpty()) "" else "N/A"
             movieDetails.productionCompanies.forEachIndexed { index, productionCompany ->
@@ -80,10 +78,10 @@ class DetailFragment : BaseFragment() {
             }
             mBinding.tvProductCompany.text = companiesName
         })
-        mViewModel.movieVideos.observe(viewLifecycleOwner, { movieVideos ->
+        mViewModel.movieVideos.observe(this, { movieVideos ->
             movieVideosAdapter?.updateData(movieVideos.movieVideoDetails)
         })
-        mViewModel.movieImages.observe(viewLifecycleOwner, { movieImages ->
+        mViewModel.movieImages.observe(this, { movieImages ->
             movieImagesAdapter?.updateData(movieImages.backdrops)
         })
     }

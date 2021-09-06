@@ -65,7 +65,7 @@ class CommentFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.movieComments.observe(viewLifecycleOwner, { data ->
+        mViewModel.movieComments.observe(this, { data ->
             mBinding.rcvComment.apply {
                 commentPagingDataAdapter?.submitData(lifecycle, data)
             }

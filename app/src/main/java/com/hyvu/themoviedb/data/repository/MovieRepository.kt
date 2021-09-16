@@ -8,22 +8,24 @@ import androidx.paging.PagingData
 import androidx.paging.rxjava2.flowable
 import com.hyvu.themoviedb.data.api.TheMovieDbAPI
 import com.hyvu.themoviedb.data.repository.datasource.MoviePagingSource
-import com.hyvu.themoviedb.data.api.TheMovieDbClient
 import com.hyvu.themoviedb.data.entity.*
 import com.hyvu.themoviedb.data.repository.datasource.CommentPagingSource
 import com.hyvu.themoviedb.data.repository.datasource.PopularMoviePagingSource
+import com.hyvu.themoviedb.database.HomeMovieDetailDao
 import com.hyvu.themoviedb.di.scope.ActivityScope
 import com.hyvu.themoviedb.utils.Constraints
+import com.hyvu.themoviedb.view.MoviesHomeFragment
+import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
-import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 @ActivityScope
-class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI) {
+class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private val homeMovieDetailDao: HomeMovieDetailDao) {
     private val compositeDisposable = CompositeDisposable()
 
     private val _responseMovieVideos = MutableLiveData<MovieVideos>()
@@ -49,6 +51,50 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI) {
 
     private val _responseMovieCredits: MutableLiveData<Credits> = MutableLiveData()
     val responseMovieCredits: LiveData<Credits> = _responseMovieCredits
+
+    fun insertMovieDetailToDatabase(movieDetail: MovieDetail) {
+        compositeDisposable.add(
+            Completable.fromAction { homeMovieDetailDao.insertMovieDetailToDatabase(movieDetail) }
+                .subscribeOn(Schedulers.io())
+                .subscribe()
+        )
+    }
+
+    fun insertGenreToDatabase(genre: Genre) {
+        compositeDisposable.add(
+            Completable.fromAction { homeMovieDetailDao.insertGenreToDatabase(genre) }
+                .subscribeOn(Schedulers.io())
+                .subscribe()
+        )
+    }
+
+    fun queryMovie() {
+        _responseMovieByGenre.postValue(Genre(-1, MoviesHomeFragment.TRENDING_MOVIE) to ArrayList())
+        compositeDisposable.add(
+            homeMovieDetailDao.getListGenres()
+                .subscribeOn(Schedulers.io())
+                .subscribe({ genres ->
+                    homeMovieDetailDao.getListMovieDetail()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ listMovieDetail ->
+                            genres.forEach { genre ->
+                                val list = ArrayList<MovieDetail>()
+                                listMovieDetail.forEach {
+                                    if (it.genreIds.contains(genre.id)) {
+                                        list.add(it)
+                                    }
+                                }
+                                _responseMovieByGenre.value = (genre to list )
+                            }
+                        }, { e ->
+                            e.printStackTrace()
+                        })
+                }, { e ->
+                    e.printStackTrace()
+                })
+        )
+    }
 
     fun fetchMovieCredits(movieId: Int) {
         compositeDisposable.add(

@@ -7,6 +7,7 @@ import androidx.room.Query
 import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.flow.Flow
 
@@ -14,11 +15,15 @@ import kotlinx.coroutines.flow.Flow
 interface HomeMovieDetailDao {
 
     @Query("SELECT * FROM movie_detail")
-    fun getListMovieDetail(): Flowable<List<MovieDetail>>
+    fun getListMovieDetail(): Single<List<MovieDetail>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(movieDetail: MovieDetail)
+    fun insertMovieDetailToDatabase(movieDetail: MovieDetail)
 
     @Query("SELECT * FROM genre")
-    fun getListGenres(): Flowable<List<Genre>>
+    fun getListGenres(): Single<List<Genre>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertGenreToDatabase(genre: Genre)
+
 }

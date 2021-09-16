@@ -1,7 +1,6 @@
 package com.hyvu.themoviedb.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +52,11 @@ class MoviesHomeFragment : BaseFragment() {
     }
 
     override fun fetchData() {
-        mViewModel.fetchTrendingMovies()
+        if (isOnline) {
+            mViewModel.fetchTrendingMovies()
+        } else {
+            mViewModel.queryMovie()
+        }
     }
 
     override fun initView() {
@@ -67,6 +70,7 @@ class MoviesHomeFragment : BaseFragment() {
 
     override fun observerLiveData() {
         mViewModel.genres.observe(this, {
+            it.genres.forEach { mViewModel.insertGenreToDatabase(it) }
         })
         mViewModel.listOverviewMovies.observe(this, { data ->
             data.second.forEach { mViewModel.insertMovieDetailToDatabase(it) }

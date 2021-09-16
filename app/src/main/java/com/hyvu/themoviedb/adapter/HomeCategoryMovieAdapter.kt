@@ -68,7 +68,7 @@ class HomeCategoryMovieAdapter(
             val genre = mapMovieCategories.keys.toList()[0]
             (holderMovieByGenre as TrendingMovieViewHolder).mBinding.apply {
                 containerSeeAll.setOnClickListener {
-                    listener.onClickedTrending()
+//                    listener.onClickedTrending()
                 }
                 val adapterViewPagerSlider = ViewPagerSliderAdapter(context, mapMovieCategories[genre]?.filterTo(
                         LinkedList<MovieDetail>(), { movie -> movie.backdropPath != null && movie.backdropPath.isNotEmpty() }), listenerViewPagerSliderAdapter

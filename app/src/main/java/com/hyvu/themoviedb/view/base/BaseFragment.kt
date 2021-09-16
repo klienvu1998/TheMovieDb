@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment: Fragment() {
 
+    val isOnline by lazy { (activity as BaseActivity).isOnline() }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         inject()
@@ -16,12 +18,12 @@ abstract class BaseFragment: Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         getBundle()
-        fetchData()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        fetchData()
         observerLiveData()
     }
 

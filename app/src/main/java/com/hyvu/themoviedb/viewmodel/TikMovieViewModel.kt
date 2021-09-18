@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import com.hyvu.themoviedb.data.entity.Genres
 import com.hyvu.themoviedb.data.entity.MovieDetail
-import com.hyvu.themoviedb.data.entity.MoviesByGenre
-import com.hyvu.themoviedb.data.entity.TikMovie
 import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.di.scope.ActivityScope
 import io.reactivex.android.schedulers.AndroidSchedulers

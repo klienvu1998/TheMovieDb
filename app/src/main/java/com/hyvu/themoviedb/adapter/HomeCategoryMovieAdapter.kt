@@ -11,6 +11,8 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.entity.*
 import com.hyvu.themoviedb.databinding.ItemBannerBinding
 import com.hyvu.themoviedb.databinding.ItemCategoryBinding
+import com.hyvu.themoviedb.utils.Constraints
+import com.hyvu.themoviedb.view.MoviesHomeFragment
 import java.util.*
 import kotlin.collections.LinkedHashMap
 
@@ -30,13 +32,13 @@ class HomeCategoryMovieAdapter(
         fun onClickedTrending()
     }
 
-    fun addMovieData(data: Pair<Genre, List<MovieDetail>>) {
-        this.mapMovieCategories[data.first] = data.second
+    fun addMovieData(data: Map<Genre, List<MovieDetail>>) {
+        this.mapMovieCategories = data as LinkedHashMap<Genre, List<MovieDetail>>
         notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) TRENDING_CATEGORY else MOVIE_BY_GENRE
+        return if (mapMovieCategories.keys.toList()[position].name == MoviesHomeFragment.TRENDING_MOVIE) TRENDING_CATEGORY else MOVIE_BY_GENRE
     }
 
     inner class MovieByGenreViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_category, parent, false)) {
@@ -64,9 +66,9 @@ class HomeCategoryMovieAdapter(
     }
 
     override fun onBindViewHolder(holderMovieByGenre: RecyclerView.ViewHolder, position: Int) {
-        if (position == TRENDING_CATEGORY) {
+        if (holderMovieByGenre is TrendingMovieViewHolder) {
             val genre = mapMovieCategories.keys.toList()[0]
-            (holderMovieByGenre as TrendingMovieViewHolder).mBinding.apply {
+            holderMovieByGenre.mBinding.apply {
                 containerSeeAll.setOnClickListener {
 //                    listener.onClickedTrending()
                 }

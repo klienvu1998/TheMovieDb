@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.rxjava2.cachedIn
 import com.hyvu.themoviedb.data.entity.MovieDetail
+import com.hyvu.themoviedb.data.entity.MoviesListResponse
 import com.hyvu.themoviedb.data.repository.MovieRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,8 +17,11 @@ import javax.inject.Inject
 class CategoryMoviesViewModel @Inject constructor(val repository: MovieRepository): ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
+
     private val _responseMovies: MutableLiveData<PagingData<MovieDetail>> = MutableLiveData()
     val responseMovies: LiveData<PagingData<MovieDetail>> = _responseMovies
+
+    val favoriteList: LiveData<MoviesListResponse> = repository.favoriteList
 
     fun getMoviesPerPage(genreId: Int) {
         compositeDisposable.add(

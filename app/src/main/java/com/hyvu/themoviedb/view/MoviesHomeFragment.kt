@@ -73,10 +73,10 @@ class MoviesHomeFragment : BaseFragment() {
             it.genres.forEach { mViewModel.insertGenreToDatabase(it) }
         })
         mViewModel.listOverviewMovies.observe(this, { data ->
-            data.second.forEach { mViewModel.insertMovieDetailToDatabase(it) }
+            data.values.forEach { it -> it.forEach { mViewModel.insertMovieDetailToDatabase(it) } }
             mBinding.progressBar.visibility = View.GONE
-            listMovieCategory[data.first] = data.second
-            adapterHomeCategoryMovie?.addMovieData(data)
+            listMovieCategory.putAll(data)
+            adapterHomeCategoryMovie?.addMovieData(listMovieCategory)
         })
         mViewModel.listTrendingMovies.observe(this, {trendingMovies ->
             if (trendingMovies != null && trendingMovies.trendingMovies.isNotEmpty()) {

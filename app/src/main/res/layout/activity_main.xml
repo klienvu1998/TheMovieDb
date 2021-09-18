@@ -85,7 +85,7 @@
         app:layout_constraintBottom_toBottomOf="@id/youtube_view_container"
         tools:text="Title"/>
 
-    <TextView
+    <ImageView
         android:id="@+id/btn_close"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -94,7 +94,8 @@
         app:layout_constraintTop_toTopOf="@id/youtube_view_container"
         app:layout_constraintBottom_toBottomOf="@id/youtube_view_container"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/ic_close" />
+        android:src="@drawable/ic_close"
+        android:tint="?attr/colorSecondary"/>
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/youtube_view"

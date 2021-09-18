@@ -11,9 +11,10 @@
 
     <ImageView
         android:id="@+id/img_poster"
-        android:layout_width="120dp"
+        android:layout_width="110dp"
         android:layout_height="0dp"
         android:padding="10dp"
+        android:src="@drawable/ic_image_not_supported"
         app:layout_constraintDimensionRatio="H,1:1.5"
         android:background="?attr/colorPrimary"
         android:adjustViewBounds="true"

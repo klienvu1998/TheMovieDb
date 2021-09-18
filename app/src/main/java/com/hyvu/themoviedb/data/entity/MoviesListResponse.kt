@@ -3,7 +3,7 @@ package com.hyvu.themoviedb.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class MoviesByGenre(
+data class MoviesListResponse(
         @SerializedName("page")
     val page: Int? = null,
         @SerializedName("results")

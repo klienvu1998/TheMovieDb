@@ -3,10 +3,7 @@ package com.hyvu.themoviedb.data.entity
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
+import androidx.room.*
 import com.google.gson.annotations.SerializedName
 import com.hyvu.themoviedb.database.DataConverter
 
@@ -68,7 +65,9 @@ data class MovieDetail(
 
     @ColumnInfo(name = "vote_count")
     @SerializedName("vote_count")
-    val voteCount: Int
+    val voteCount: Int,
+
+    var isFavorite: Boolean = false
 ) : Parcelable {
     @Suppress("UNREACHABLE_CODE")
     constructor(parcel: Parcel) : this(
@@ -85,7 +84,8 @@ data class MovieDetail(
             parcel.readString() ?: "",
             parcel.readByte() != 0.toByte(),
             parcel.readDouble(),
-            parcel.readInt()) {
+            parcel.readInt(),
+        parcel.readByte() != 0.toByte()) {
     }
 
     fun getBackdropImage(): String? {
@@ -110,6 +110,7 @@ data class MovieDetail(
         parcel.writeByte(if (video) 1 else 0)
         parcel.writeDouble(voteAverage)
         parcel.writeInt(voteCount)
+        parcel.writeByte(if (isFavorite) 1 else 0)
     }
 
     override fun describeContents(): Int {

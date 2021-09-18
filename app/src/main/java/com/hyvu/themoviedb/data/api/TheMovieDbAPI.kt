@@ -18,7 +18,7 @@ interface TheMovieDbAPI {
     @GET("movie/popular")
     fun getPopularMovie(
             @Query("page") page: Int
-    ): Single<MoviesByGenre>
+    ): Single<MoviesListResponse>
 
     @GET("genre/movie/list")
     fun getListGenres(): Observable<Genres>
@@ -27,7 +27,7 @@ interface TheMovieDbAPI {
     fun getMoviesByGenre(
         @Query("with_genres") genes: Int,
         @Query("page") page: Int,
-    ): Single<MoviesByGenre>
+    ): Single<MoviesListResponse>
 
     @GET("movie/{movie_id}")
     fun getMovieDetails(
@@ -60,4 +60,22 @@ interface TheMovieDbAPI {
     fun getMovieImages(
         @Path("movie_id") movieId: Int
     ): Single<MovieImages>
+
+    @GET("/3/account/{account_id}/favorite/movies")
+    fun getFavoriteMovie(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String
+    ): Single<MoviesListResponse>
+
+    @POST("/3/account/{account_id}/favorite")
+    fun setFavorite(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body body: HashMap<String, Any>
+    ): Single<Favorite>
+
+    @GET("/3/account")
+    fun getAccountDetail(
+        @Query("session_id") sessionId: String
+    ): Single<AccountDetails>
 }

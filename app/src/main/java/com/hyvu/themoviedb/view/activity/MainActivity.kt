@@ -5,6 +5,7 @@ import android.view.View
 import android.view.WindowManager
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hyvu.themoviedb.MyApplication
@@ -48,7 +49,7 @@ class MainActivity : BaseActivity() {
     }
 
     override fun fetchData() {
-
+        mViewModel.fetchAccountDetail(userManager.sessionId)
     }
 
     override fun inject() {
@@ -81,7 +82,12 @@ class MainActivity : BaseActivity() {
     }
 
     override fun observerLiveData() {
-
+        mViewModel.accountDetails.observe(this, Observer {
+            it.id?.let { it1 ->
+                userManager.accountId = it1
+                mViewModel.fetchFavoriteMovie(it1, userManager.sessionId)
+            }
+        })
     }
 
     private fun initTabLayoutMain() {

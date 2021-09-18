@@ -27,4 +27,5 @@ interface MainComponent {
     fun inject(fragment: TikMovieFragment)
     fun inject(fragment: UserFragment)
     fun inject(fragment: UserSettingsFragment)
+    fun inject(fragment: UserHomeFragment)
 }

@@ -11,6 +11,7 @@ import com.hyvu.themoviedb.di.scope.ActivityScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import retrofit2.http.Body
 import javax.inject.Inject
 
 @ActivityScope
@@ -23,6 +24,11 @@ class MovieInfoViewModel @Inject constructor(val repository: MovieRepository): V
     val movieFullDetails: LiveData<MovieFullDetails> = repository.responseCurrentMovieDetail
     private val _movieImages: MutableLiveData<MovieImages> = MutableLiveData()
     val movieImages: LiveData<MovieImages> = _movieImages
+
+    private val _favorite: MutableLiveData<Favorite> = MutableLiveData()
+    val favorite: LiveData<Favorite> = _favorite
+
+    val favoriteList: LiveData<MoviesListResponse> = repository.favoriteList
 
     fun fetchMovieImages(movieId: Int) {
         compositeDisposable.add(
@@ -45,8 +51,29 @@ class MovieInfoViewModel @Inject constructor(val repository: MovieRepository): V
         repository.fetchMovieCredits(movieId)
     }
 
+    fun setFavorite(accountId: Int, sessionId: String, movieId: Int, isFavorite: Boolean) {
+        val body = HashMap<String, Any>()
+        body["media_type"] = "movie"
+        body["media_id"] = movieId
+        body["favorite"] = isFavorite
+        compositeDisposable.add(
+            TheMovieDbClient.getClient().setFavorite(accountId, sessionId, body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _favorite.postValue(it)
+                }, { e ->
+                    e.printStackTrace()
+                })
+        )
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    fun updateFavoriteList(movieDetail: MovieDetail) {
+        repository.updateFavoriteList(movieDetail)
     }
 }

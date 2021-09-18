@@ -2,6 +2,7 @@ package com.hyvu.themoviedb.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.hyvu.themoviedb.adapter.UserCategoryAdapter
 import com.hyvu.themoviedb.di.scope.ViewModelKey
 import com.hyvu.themoviedb.viewmodel.*
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
@@ -44,4 +45,9 @@ abstract class MainViewModelModule {
     @IntoMap
     @ViewModelKey(CategoryMoviesViewModel::class)
     abstract fun provideMovieByGenreViewModel(viewModel: CategoryMoviesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UserViewModel::class)
+    abstract fun provideUserViewModel(viewModel: UserViewModel): ViewModel
 }

@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface HomeMovieDetailDao {
 
-    @Query("SELECT * FROM movie_detail")
+    @Query("SELECT * FROM movie_detail ORDER BY id ASC")
     fun getListMovieDetail(): Single<List<MovieDetail>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovieDetailToDatabase(movieDetail: MovieDetail)
 
-    @Query("SELECT * FROM genre")
+    @Query("SELECT * FROM genre ORDER BY id DESC")
     fun getListGenres(): Single<List<Genre>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

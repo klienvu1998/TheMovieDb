@@ -5,9 +5,11 @@ import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.hyvu.themoviedb.R
+import com.hyvu.themoviedb.adapter.MovieGridAdapter
 import com.hyvu.themoviedb.adapter.MoviesPagingDataAdapter
 import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.databinding.FragmentMoviesByGenreBinding
@@ -39,6 +41,7 @@ class MoviesByGenreFragment : BaseFragment() {
     private lateinit var genre: Genre
     private lateinit var mBinding: FragmentMoviesByGenreBinding
     private var moviePagingDataAdapter: MoviesPagingDataAdapter? = null
+    private var movieGridAdapter: MovieGridAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,24 +61,12 @@ class MoviesByGenreFragment : BaseFragment() {
     }
 
     override fun fetchData() {
-        mViewModel.getMoviesPerPage(genre.id ?: -1)
+        if (genre.name != "Favorite") {
+            mViewModel.getMoviesPerPage(genre.id ?: -1)
+        }
     }
 
     override fun initView() {
-        moviePagingDataAdapter = MoviesPagingDataAdapter(context, listenerMoviesPagingDataAdapter)
-        mBinding.rcvMovie.apply {
-            val displayMetrics = DisplayMetrics()
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                context.display?.getRealMetrics(displayMetrics)
-            } else {
-                @Suppress("DEPRECATION")
-                (context as MainActivity).windowManager?.defaultDisplay?.getMetrics(displayMetrics)
-            }
-
-            val itemWidth = (displayMetrics.widthPixels / (110 * resources.displayMetrics.density)).toInt()
-            layoutManager = GridLayoutManager(context, itemWidth, GridLayoutManager.VERTICAL, false)
-            adapter = moviePagingDataAdapter
-        }
         mBinding.toolBarContainer.tvTitle.text = genre.name
         mBinding.toolBarContainer.btnBack.setOnClickListener {
             parentFragment?.childFragmentManager?.popBackStack()
@@ -83,9 +74,48 @@ class MoviesByGenreFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.responseMovies.observe(this, { pagingData ->
-            moviePagingDataAdapter?.submitData(lifecycle, pagingData)
-        })
+        when (genre.name) {
+            "Favorite" -> {
+                mViewModel.favoriteList.observe(viewLifecycleOwner, { movieListResponse ->
+                    movieGridAdapter = MovieGridAdapter(context, movieListResponse.movieDetails)
+                    mBinding.rcvMovie.apply {
+                        val displayMetrics = DisplayMetrics()
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                            context.display?.getRealMetrics(displayMetrics)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            (context as MainActivity).windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+                        }
+
+                        val itemWidth = (displayMetrics.widthPixels / (110 * resources.displayMetrics.density)).toInt()
+                        layoutManager = GridLayoutManager(context, itemWidth, GridLayoutManager.VERTICAL, false)
+                        adapter = movieGridAdapter
+                    }
+                    if (movieListResponse.movieDetails.isNotEmpty()) {
+                        mBinding.progressBar.visibility = View.INVISIBLE
+                    }
+                })
+            }
+            else -> {
+                mViewModel.responseMovies.observe(viewLifecycleOwner, { pagingData ->
+                    moviePagingDataAdapter = MoviesPagingDataAdapter(context, listenerMoviesPagingDataAdapter)
+                    mBinding.rcvMovie.apply {
+                        val displayMetrics = DisplayMetrics()
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                            context.display?.getRealMetrics(displayMetrics)
+                        } else {
+                            @Suppress("DEPRECATION")
+                            (context as MainActivity).windowManager?.defaultDisplay?.getMetrics(displayMetrics)
+                        }
+
+                        val itemWidth = (displayMetrics.widthPixels / (110 * resources.displayMetrics.density)).toInt()
+                        layoutManager = GridLayoutManager(context, itemWidth, GridLayoutManager.VERTICAL, false)
+                        adapter = moviePagingDataAdapter
+                    }
+                    moviePagingDataAdapter?.submitData(lifecycle, pagingData)
+                })
+            }
+        }
     }
 
     private val listenerMoviesPagingDataAdapter = object : MoviesPagingDataAdapter.Listener {

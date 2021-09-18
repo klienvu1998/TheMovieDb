@@ -9,8 +9,10 @@
         android:id="@+id/img_user"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:src="@drawable/ic_user"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        android:tint="?attr/colorSecondary"/>
 
     <TextView
         android:id="@+id/tv_user_name"

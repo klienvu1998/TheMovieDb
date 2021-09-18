@@ -18,7 +18,6 @@ class Utils {
                 Glide.with(context)
                     .load(baseUrl + url)
                     .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .error(errorDrawable)
                     .into(imageView)
             }

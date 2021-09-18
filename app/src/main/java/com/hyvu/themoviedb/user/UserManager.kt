@@ -8,6 +8,7 @@ import javax.inject.Singleton
 @Singleton
 class UserManager @Inject constructor(private val storage: Storage) {
 
+    var accountId: Int? = null
     val sessionId: String
         get() = storage.getString(SharedPreferenceData.SESSION_ID)
     val isNightMode: Boolean

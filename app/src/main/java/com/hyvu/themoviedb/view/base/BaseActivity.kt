@@ -74,6 +74,7 @@ abstract class BaseActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(getLayoutId())
         getBundle()
+        fetchData()
         initView()
         observerLiveData()
     }

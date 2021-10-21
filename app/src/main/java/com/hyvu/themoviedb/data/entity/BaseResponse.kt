@@ -3,7 +3,7 @@ package com.hyvu.themoviedb.data.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class Favorite(
+data class BaseResponse(
     @SerializedName("success")
     val success: Boolean?,
     @SerializedName("status_code")

@@ -12,7 +12,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(private val repository: MovieRepository): ViewModel() {
     private val compositeDisposable = CompositeDisposable()
 
-    val genres: LiveData<Genres> = repository.responseListMovieGenre
+    val genres: LiveData<List<Genre>> = repository.responseListMovieGenre
     val listOverviewMovies: LiveData<Map<Genre, List<MovieDetail>>> = repository.responseMovieByGenre
     val listTrendingMovies: LiveData<TrendingMovies> = repository.responseTrendingMovies
 
@@ -24,21 +24,17 @@ class HomeViewModel @Inject constructor(private val repository: MovieRepository)
         repository.fetchTrendingMovie()
     }
 
-    fun insertMovieDetailToDatabase(movieDetail: MovieDetail) {
-        repository.insertMovieDetailToDatabase(movieDetail)
-    }
-
-    fun insertGenreToDatabase(genre: Genre) {
-        repository.insertGenreToDatabase(genre)
-    }
-
-    fun queryMovie() {
-        repository.queryMovie()
-    }
-
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    fun fetchDatabase() {
+        repository.getGenresInDatabase()
+    }
+
+    fun getListMovieDetailByGenre(genres: List<Genre>) {
+        repository.getListMovieDetailByGenreInDatabase(genres)
     }
 
 }

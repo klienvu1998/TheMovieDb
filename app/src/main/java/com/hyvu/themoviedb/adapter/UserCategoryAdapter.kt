@@ -14,7 +14,7 @@ import com.hyvu.themoviedb.databinding.ItemCategoryBinding
 class UserCategoryAdapter(
     private val context: Context?,
     private val listener: Listener,
-    private val listMovie: Map<Genre, List<MovieDetail>>
+    private var listMovie: Map<Genre, List<MovieDetail>>
 ): RecyclerView.Adapter<UserCategoryAdapter.ViewHolder>() {
 
     interface Listener {
@@ -22,7 +22,8 @@ class UserCategoryAdapter(
     }
 
     fun setData(listMovie: Map<Genre, List<MovieDetail>>) {
-        (this.listMovie as LinkedHashMap).putAll(listMovie)
+        this.listMovie = listMovie
+        notifyDataSetChanged()
     }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -41,7 +42,7 @@ class UserCategoryAdapter(
             containerSeeAll.setOnClickListener {
                 listener.onClickedSeeAll(movie)
             }
-            val adapter = HomeCategoryMovieChildAdapter(context, listMovie[movie], childListener)
+            val adapter = HomeCategoryMovieChildAdapter(context, listMovie[movie])
             rcvMovie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             rcvMovie.adapter = adapter
         }
@@ -49,9 +50,5 @@ class UserCategoryAdapter(
 
     override fun getItemCount(): Int {
         return listMovie.size
-    }
-
-    private val childListener = object : HomeCategoryMovieChildAdapter.Listener {
-
     }
 }

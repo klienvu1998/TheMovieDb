@@ -32,7 +32,7 @@ class CastFragment : BaseFragment() {
     }
 
     override fun getBundle() {
-        movieId = (activity as MainActivity).currentMovie?.id ?: 0
+        movieId = (activity as MainActivity).currentMovie?.movieId ?: 0
     }
 
     override fun fetchData() {

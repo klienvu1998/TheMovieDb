@@ -15,12 +15,7 @@ import com.hyvu.themoviedb.view.activity.MainActivity
 class HomeCategoryMovieChildAdapter(
         private val context: Context?,
         private val listMovieDetails: List<MovieDetail>?,
-        private val listener: Listener,
 ): RecyclerView.Adapter<HomeCategoryMovieChildAdapter.ViewHolder>() {
-
-    interface Listener {
-
-    }
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val mBinding = ItemPosterBinding.bind(view)
@@ -34,12 +29,12 @@ class HomeCategoryMovieChildAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val movieDetail = listMovieDetails?.get(position)
         holder.mBinding.apply {
-            Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail?.posterPath, imgPoster, R.drawable.ic_image_not_supported)
             tvMovieName.text = movieDetail?.title
             tvRating.text = movieDetail?.voteAverage.toString()
             movieContainer.setOnClickListener {
                 (context as MainActivity).showMovieDetails(movieDetail!!)
             }
+            Utils.loadGlidePosterImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail?.posterPath, imgPoster, R.drawable.ic_image_not_supported)
         }
     }
 

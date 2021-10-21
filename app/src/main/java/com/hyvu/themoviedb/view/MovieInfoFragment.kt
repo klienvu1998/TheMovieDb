@@ -1,12 +1,10 @@
 package com.hyvu.themoviedb.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
@@ -50,7 +48,7 @@ class MovieInfoFragment: BaseFragment() {
     }
 
     override fun fetchData() {
-        mViewModel.fetchMovieDetails(movieDetail.id)
+        mViewModel.fetchMovieDetails(movieDetail.movieId)
     }
 
     override fun initView() {
@@ -60,13 +58,22 @@ class MovieInfoFragment: BaseFragment() {
             (context as MainActivity).showComment()
         }
         initTabLayoutDetail()
-        mViewModel.favoriteList.observe(viewLifecycleOwner, Observer {
-            val movie = it.movieDetails.firstOrNull { it.id == movieDetail.id }
+        mViewModel.favoriteList.observe(viewLifecycleOwner, { it ->
+            val movie = it.movieDetails.firstOrNull { it.movieId == movieDetail.movieId }
             if (movie != null) {
                 setUpFavoriteButton(true)
                 movieDetail.isFavorite = true
             } else {
                 setUpFavoriteButton(false)
+            }
+        })
+        mViewModel.watchList.observe(viewLifecycleOwner, { it ->
+            val movie = it.movieDetails.firstOrNull { it.movieId == movieDetail.movieId }
+            if (movie != null) {
+                setWatchListButton(true)
+                movieDetail.isWatchList = true
+            } else {
+                setWatchListButton(false)
             }
         })
     }
@@ -79,7 +86,20 @@ class MovieInfoFragment: BaseFragment() {
         }
         mBinding.btnHeart.setOnClickListener {
             (activity as MainActivity).userManager.accountId?.let { it1 ->
-                mViewModel.setFavorite(it1, (activity as MainActivity).userManager.sessionId, movieDetail.id, !movieDetail.isFavorite)
+                mViewModel.setFavorite(it1, (activity as MainActivity).userManager.sessionId, movieDetail.movieId, !movieDetail.isFavorite)
+            }
+        }
+    }
+
+    private fun setWatchListButton(isWatchedList: Boolean) {
+        if (isWatchedList) {
+            mBinding.btnPlaylist.setImageResource(R.drawable.ic_added_playlist)
+        } else {
+            mBinding.btnPlaylist.setImageResource(R.drawable.ic_add_playlist)
+        }
+        mBinding.btnPlaylist.setOnClickListener {
+            (activity as MainActivity).userManager.accountId?.let { it1 ->
+                mViewModel.addWatchList(it1, (activity as MainActivity).userManager.sessionId, movieDetail.movieId, !movieDetail.isWatchList)
             }
         }
     }
@@ -93,6 +113,13 @@ class MovieInfoFragment: BaseFragment() {
                 movieDetail.isFavorite = !movieDetail.isFavorite
                 setUpFavoriteButton(movieDetail.isFavorite)
                 mViewModel.updateFavoriteList(movieDetail)
+            }
+        })
+        mViewModel.watchListResponse.observe(viewLifecycleOwner, {
+            if ((it.statusCode ?: -1) >= 0) {
+                movieDetail.isWatchList = !movieDetail.isWatchList
+                setWatchListButton(movieDetail.isWatchList)
+                mViewModel.updateWatchList(movieDetail)
             }
         })
     }
@@ -142,6 +169,5 @@ class MovieInfoFragment: BaseFragment() {
                 adapter = GenresAdapter(context, movieFullDetails.genres)
             }
         }
-        if (!movieFullDetails.spokenLanguages.isNullOrEmpty()) mBinding.tvSpokenLanguage.text = movieFullDetails.spokenLanguages[0].iso6391.toUpperCase()
     }
 }

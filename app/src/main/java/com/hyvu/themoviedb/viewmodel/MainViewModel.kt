@@ -26,4 +26,7 @@ class MainViewModel @Inject constructor(val repository: MovieRepository): ViewMo
         repository.fetchAccountDetail(sessionId)
     }
 
+    fun fetchWatchList(accountId: Int, sessionId: String) {
+        repository.fetchWatchList(accountId, sessionId)
+    }
 }

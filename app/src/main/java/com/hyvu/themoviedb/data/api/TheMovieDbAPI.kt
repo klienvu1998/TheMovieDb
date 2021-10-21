@@ -42,9 +42,6 @@ interface TheMovieDbAPI {
     @GET("trending/movie/day")
     fun getTrendingMovies(): Single<TrendingMovies>
 
-    @GET("movie/latest")
-    fun getLatestMovie(): Single<MovieDetail>
-
     @GET("movie/{movie_id}/credits")
     fun getCredits(
         @Path("movie_id") movieId: Int
@@ -72,10 +69,23 @@ interface TheMovieDbAPI {
         @Path("account_id") accountId: Int,
         @Query("session_id") sessionId: String,
         @Body body: HashMap<String, Any>
-    ): Single<Favorite>
+    ): Single<BaseResponse>
 
     @GET("/3/account")
     fun getAccountDetail(
         @Query("session_id") sessionId: String
     ): Single<AccountDetails>
+
+    @GET("/3/account/{account_id}/watchlist/movies")
+    fun getWatchList(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+    ): Single<MoviesListResponse>
+
+    @POST("/3/account/{account_id}/watchlist")
+    fun addWatchList(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body body: HashMap<String, Any>
+    ): Single<BaseResponse>
 }

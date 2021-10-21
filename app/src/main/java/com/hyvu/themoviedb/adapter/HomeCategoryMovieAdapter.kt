@@ -15,6 +15,7 @@ import com.hyvu.themoviedb.utils.Constraints
 import com.hyvu.themoviedb.view.MoviesHomeFragment
 import java.util.*
 import kotlin.collections.LinkedHashMap
+import kotlin.math.abs
 
 class HomeCategoryMovieAdapter(
     private val context: Context?,
@@ -61,10 +62,6 @@ class HomeCategoryMovieAdapter(
         return this.mapMovieCategories.keys.size
     }
 
-    private val childListener = object : HomeCategoryMovieChildAdapter.Listener {
-
-    }
-
     override fun onBindViewHolder(holderMovieByGenre: RecyclerView.ViewHolder, position: Int) {
         if (holderMovieByGenre is TrendingMovieViewHolder) {
             val genre = mapMovieCategories.keys.toList()[0]
@@ -85,7 +82,7 @@ class HomeCategoryMovieAdapter(
                 val compositePageTransformer = CompositePageTransformer()
                 compositePageTransformer.addTransformer(MarginPageTransformer(30))
                 compositePageTransformer.addTransformer { page, position ->
-                    val r = 1 - Math.abs(position)
+                    val r = 1 - abs(position)
                     page.scaleY = 0.85f + r * 0.15f
                 }
                 viewPagerTrending.setPageTransformer(compositePageTransformer)
@@ -95,7 +92,7 @@ class HomeCategoryMovieAdapter(
             (holderMovieByGenre as MovieByGenreViewHolder).mBinding.apply {
                 tvCategoryName.text = genre.name
                 rcvMovie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                val adapter = HomeCategoryMovieChildAdapter(context, mapMovieCategories[genre], childListener)
+                val adapter = HomeCategoryMovieChildAdapter(context, mapMovieCategories[genre])
                 rcvMovie.adapter = adapter
                 rcvMovie.setRecycledViewPool(viewPool)
                 holderMovieByGenre.mBinding.containerSeeAll.setOnClickListener {

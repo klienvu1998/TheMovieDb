@@ -4,14 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.rxjava2.cachedIn
+import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.entity.MoviesListResponse
 import com.hyvu.themoviedb.data.repository.MovieRepository
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CategoryMoviesViewModel @Inject constructor(val repository: MovieRepository): ViewModel() {
@@ -22,12 +27,13 @@ class CategoryMoviesViewModel @Inject constructor(val repository: MovieRepositor
     val responseMovies: LiveData<PagingData<MovieDetail>> = _responseMovies
 
     val favoriteList: LiveData<MoviesListResponse> = repository.favoriteList
+    val watchList: LiveData<MoviesListResponse> = repository.watchList
 
-    fun getMoviesPerPage(genreId: Int) {
+    @ExperimentalPagingApi
+    fun getMovieByGenre(genreId: Int) {
         compositeDisposable.add(
-                repository.fetchMovieByGenrePerPage(genreId).cachedIn(viewModelScope)
+                repository.fetchMovieByGenre(genreId).cachedIn(viewModelScope)
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             _responseMovies.postValue(it)
                         }, { e ->

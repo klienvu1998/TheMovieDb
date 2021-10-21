@@ -1,32 +1,31 @@
 package com.hyvu.themoviedb.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.rxjava2.flowable
 import com.hyvu.themoviedb.data.api.TheMovieDbAPI
 import com.hyvu.themoviedb.data.api.TheMovieDbClient
-import com.hyvu.themoviedb.data.repository.datasource.MoviePagingSource
 import com.hyvu.themoviedb.data.entity.*
 import com.hyvu.themoviedb.data.repository.datasource.CommentPagingSource
+import com.hyvu.themoviedb.data.repository.datasource.MovieDetailsMediator
 import com.hyvu.themoviedb.data.repository.datasource.PopularMoviePagingSource
-import com.hyvu.themoviedb.database.HomeMovieDetailDao
+import com.hyvu.themoviedb.database.HomeDatabase
 import com.hyvu.themoviedb.di.scope.ActivityScope
 import com.hyvu.themoviedb.utils.Constraints
-import com.hyvu.themoviedb.view.MoviesHomeFragment
-import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 @ActivityScope
-class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private val homeMovieDetailDao: HomeMovieDetailDao) {
+class MovieRepository @Inject constructor(private val apiService: TheMovieDbAPI, private val database: HomeDatabase) {
     private val compositeDisposable = CompositeDisposable()
 
     private val _responseMovieVideos = MutableLiveData<MovieVideos>()
@@ -35,20 +34,14 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
     private val _responseCurrentMovieDetail = MutableLiveData<MovieFullDetails>()
     val responseCurrentMovieDetail: LiveData<MovieFullDetails> = _responseCurrentMovieDetail
 
-    private val _responseCurrentMovieDetailForTikMovie = MutableLiveData<TikMovie>()
-    val responseCurrentMovieDetailForTikMovie: LiveData<TikMovie> = _responseCurrentMovieDetailForTikMovie
-
-    private val _responseListMovieGenre: MutableLiveData<Genres> = MutableLiveData()
-    val responseListMovieGenre: LiveData<Genres> = _responseListMovieGenre
+    private val _responseListMovieGenre: MutableLiveData<List<Genre>> = MutableLiveData()
+    val responseListMovieGenre: LiveData<List<Genre>> = _responseListMovieGenre
 
     private val _responseMovieByGenre: MutableLiveData<Map<Genre, List<MovieDetail>>> = MutableLiveData()
     val responseMovieByGenre: LiveData<Map<Genre, List<MovieDetail>>> = _responseMovieByGenre
 
     private val _responseTrendingMovies: MutableLiveData<TrendingMovies> = MutableLiveData()
     val responseTrendingMovies: LiveData<TrendingMovies> = _responseTrendingMovies
-
-    private val _responseLatestMovieDetail: MutableLiveData<MovieDetail> = MutableLiveData()
-    val responseLatestMovieDetail: LiveData<MovieDetail> = _responseLatestMovieDetail
 
     private val _responseMovieCredits: MutableLiveData<Credits> = MutableLiveData()
     val responseMovieCredits: LiveData<Credits> = _responseMovieCredits
@@ -59,53 +52,13 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
     private val _accountDetails: MutableLiveData<AccountDetails> = MutableLiveData()
     val accountDetails: LiveData<AccountDetails> = _accountDetails
 
-    fun insertMovieDetailToDatabase(movieDetail: MovieDetail) {
-        compositeDisposable.add(
-            Completable.fromAction { homeMovieDetailDao.insertMovieDetailToDatabase(movieDetail) }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
-        )
-    }
-
-    fun insertGenreToDatabase(genre: Genre) {
-        compositeDisposable.add(
-            Completable.fromAction { homeMovieDetailDao.insertGenreToDatabase(genre) }
-                .subscribeOn(Schedulers.io())
-                .subscribe()
-        )
-    }
-
-    fun queryMovie() {
-        val map = LinkedHashMap<Genre, List<MovieDetail>>()
-        map[Genre(-1, MoviesHomeFragment.TRENDING_MOVIE)] = ArrayList()
-        compositeDisposable.add(
-            homeMovieDetailDao.getListGenres()
-                .subscribeOn(Schedulers.io())
-                .subscribe({ genres ->
-                    homeMovieDetailDao.getListMovieDetail()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ listMovieDetail ->
-                            genres.forEach { genre ->
-                                listMovieDetail.forEach {
-                                    (map[genre] as ArrayList).add(it)
-                                }
-                                _responseMovieByGenre.postValue(map)
-                            }
-                        }, { e ->
-                            e.printStackTrace()
-                        })
-                }, { e ->
-                    e.printStackTrace()
-                })
-        )
-    }
+    private val _watchList: MutableLiveData<MoviesListResponse> = MutableLiveData()
+    val watchList: LiveData<MoviesListResponse> = _watchList
 
     fun fetchMovieCredits(movieId: Int) {
         compositeDisposable.add(
             apiService.getCredits(movieId)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _responseMovieCredits.postValue(it)
                 }, { e ->
@@ -118,7 +71,6 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
         compositeDisposable.add(
                 apiService.getTrendingMovies()
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             _responseTrendingMovies.postValue(it)
                         }, { e ->
@@ -134,10 +86,8 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
                             _responseCurrentMovieDetail.postValue(detail)
                             apiService.getMovieVideos(movieId)
                                     .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
                         }
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ videos ->
                             _responseMovieVideos.postValue(videos)
                         }, { e ->
@@ -152,23 +102,22 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
         compositeDisposable.add(
             TheMovieDbClient.getClient().getListGenres()
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ data ->
-                    _responseListMovieGenre.postValue(data)
+                    _responseListMovieGenre.postValue(data.genres)
+//                    database.homeMovieDetailDao().insertListGenres(data.genres)
                     Observable.just(data.genres)
                         .concatMap { genres -> Observable.fromIterable(genres) }
                         .concatMapSingle { genre ->
                             genre.id?.let { TheMovieDbClient.getClient().getMoviesByGenre(it, 1) }
                         }
                         .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ movies ->
+//                            database.homeMovieDetailDao().insertListMovieDetail(movies.movieDetails)
                             map[data.genres[i++]] = movies.movieDetails
-                            _responseMovieByGenre.postValue(map)
                         }, { e ->
                             e.printStackTrace()
                         }, {
-
+                            _responseMovieByGenre.postValue(map)
                         })
                 }, { e ->
                     e.printStackTrace()
@@ -176,14 +125,18 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
         )
     }
 
-    fun fetchMovieByGenrePerPage(genreId: Int): Flowable<PagingData<MovieDetail>> {
+    @ExperimentalPagingApi
+    fun fetchMovieByGenre(genreId: Int): Flowable<PagingData<MovieDetail>> {
         return Pager(
             config = PagingConfig(
-                maxSize = Constraints.MAX_ITEM_PER_SCROLL,
-                pageSize = Constraints.NETWORK_PAGE_SIZE,
-                enablePlaceholders = false
+                pageSize = 20,
+                enablePlaceholders = true,
+                maxSize = 100,
+                prefetchDistance = 5,
+                initialLoadSize = 20
             ),
-            pagingSourceFactory = { MoviePagingSource(apiService, genreId) }
+            remoteMediator = MovieDetailsMediator(genreId, apiService, database),
+            pagingSourceFactory = { database.homeMovieDetailDao().getPagingListMovieDetailByGenre(genreId) }
         ).flowable
     }
 
@@ -209,24 +162,10 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
         ).flowable
     }
 
-    fun fetchLatestMovie() {
-        compositeDisposable.add(
-                apiService.getLatestMovie()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            _responseLatestMovieDetail.postValue(it)
-                        }, { e ->
-                            e.printStackTrace()
-                        })
-        )
-    }
-
     fun fetchFavoriteMovie(accountId: Int, sessionId: String) {
         compositeDisposable.add(
             apiService.getFavoriteMovie(accountId, sessionId)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _favoriteList.postValue(it)
                 }, {
@@ -239,7 +178,6 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
         compositeDisposable.add(
             apiService.getAccountDetail(sessionId)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     _accountDetails.postValue(it)
                 }, { e ->
@@ -259,8 +197,63 @@ class MovieRepository @Inject constructor(val apiService: TheMovieDbAPI, private
         _favoriteList.postValue(favoriteList)
     }
 
+    fun fetchWatchList(accountId: Int, sessionId: String) {
+        compositeDisposable.add(
+            apiService.getWatchList(accountId, sessionId)
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    _watchList.postValue(it)
+                }, {
+                    it.printStackTrace()
+                })
+        )
+    }
+
+    fun updateWatchList(movieDetail: MovieDetail) {
+        val watchList = _watchList.value
+        if (movieDetail.isWatchList) {
+            (watchList?.movieDetails as ArrayList).add(movieDetail)
+        }
+        else {
+            (watchList?.movieDetails as ArrayList).remove(movieDetail)
+        }
+        _watchList.postValue(watchList)
+    }
+
     fun deinit() {
         compositeDisposable.clear()
+    }
+
+    fun getGenresInDatabase() {
+        compositeDisposable.add(
+            database.homeMovieDetailDao().getListGenres()
+                .subscribeOn(Schedulers.io())
+                .subscribe({
+                    _responseListMovieGenre.postValue(it)
+                }, { e ->
+                    e.printStackTrace()
+                })
+        )
+    }
+
+    fun getListMovieDetailByGenreInDatabase(genres: List<Genre>) {
+        var i = 0
+        val map = LinkedHashMap<Genre, List<MovieDetail>>()
+        compositeDisposable.add(
+            Observable.just(genres)
+                .concatMap { Observable.fromIterable(it) }
+                .concatMapSingle { genre ->
+                    genre.id?.let { database.homeMovieDetailDao().getMoviesByGenre(it) }
+                }
+                .subscribeOn(Schedulers.io())
+                .subscribe( {
+                    map[genres[i++]] = it
+                }, { e ->
+                    e.printStackTrace()
+                }, {
+                    _responseMovieByGenre.postValue(map)
+                })
+        )
     }
 
 }

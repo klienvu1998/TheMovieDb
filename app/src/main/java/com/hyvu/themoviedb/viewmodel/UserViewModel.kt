@@ -8,4 +8,5 @@ import javax.inject.Inject
 
 class UserViewModel @Inject constructor(repository: MovieRepository): ViewModel() {
     val favoriteList: LiveData<MoviesListResponse> = repository.favoriteList
+    val watchList: LiveData<MoviesListResponse> = repository.watchList
 }

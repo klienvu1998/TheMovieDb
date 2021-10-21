@@ -12,4 +12,8 @@ data class MoviesListResponse(
     val totalPages: Int? = null,
         @SerializedName("total_results")
     val totalResults: Int? = null
-)
+) {
+    fun endOfPage(): Boolean {
+        return this.page == this.totalPages
+    }
+}

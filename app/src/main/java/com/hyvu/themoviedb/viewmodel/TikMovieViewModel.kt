@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
+import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.data.entity.Genres
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.data.repository.MovieRepository
@@ -19,11 +20,7 @@ class TikMovieViewModel @Inject constructor(val repository: MovieRepository): Vi
 
     private val _tikMovieDetails: MutableLiveData<PagingData<MovieDetail>> = MutableLiveData()
     val tikMovieDetails: LiveData<PagingData<MovieDetail>> = _tikMovieDetails
-    val movieGenres: LiveData<Genres> = repository.responseListMovieGenre
-
-    fun fetchLatestMovie() {
-        repository.fetchLatestMovie()
-    }
+    val movieGenres: LiveData<List<Genre>> = repository.responseListMovieGenre
 
     fun fetchTikMovie() {
         compositeDisposable.add(

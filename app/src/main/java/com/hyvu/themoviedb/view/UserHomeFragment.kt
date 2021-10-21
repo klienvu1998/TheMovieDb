@@ -27,7 +27,7 @@ class UserHomeFragment: BaseFragment() {
     }
     private lateinit var mBinding: FragmentUserHomeBinding
     private var adapterCategoryMovie: UserCategoryAdapter? = null
-
+    val mapMovies: LinkedHashMap<Genre, List<MovieDetail>> = LinkedHashMap()
 
     override fun inject() {
         (activity as MainActivity).mainComponent.inject(this)
@@ -51,9 +51,11 @@ class UserHomeFragment: BaseFragment() {
 
     override fun observerLiveData() {
         mViewModel.favoriteList.observe(viewLifecycleOwner, Observer {
-            val map: LinkedHashMap<Genre, List<MovieDetail>> = LinkedHashMap()
-            map[Genre(-1, "Favorite")] = it.movieDetails
-            adapterCategoryMovie?.setData(map)
+            mapMovies[Genre(-1, "Favorite")] = it.movieDetails
+            mViewModel.watchList.observe(viewLifecycleOwner, Observer {
+                mapMovies[Genre(-1, "Watchlist")] = it.movieDetails
+                adapterCategoryMovie?.setData(mapMovies)
+            })
         })
     }
 

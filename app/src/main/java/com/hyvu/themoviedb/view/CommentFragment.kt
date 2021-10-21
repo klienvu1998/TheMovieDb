@@ -34,7 +34,7 @@ class CommentFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View {
         val v = inflater.inflate(R.layout.fragment_comment, container, false)
         mBinding = FragmentCommentBinding.bind(v)
-        mViewModel.fetchMovieComments(currentMovie.id)
+        mViewModel.fetchMovieComments(currentMovie.movieId)
         return mBinding.root
     }
 

@@ -6,7 +6,9 @@ object Constraints {
     const val YOUTUBE_THUMBNAIL = "https://img.youtube.com/vi/"
     fun getYoutubeThumbnailLink(videoId: String) = "$YOUTUBE_THUMBNAIL$videoId/hqdefault.jpg"
 
-    const val NETWORK_PAGE_SIZE = 50
+    const val DATABASE_NAME = "TMDB.db"
+
+    const val NETWORK_PAGE_SIZE = 20
     const val MAX_ITEM_PER_SCROLL = 200
 
 

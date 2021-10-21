@@ -48,7 +48,7 @@ data class TrendingMovie(
                 adult = adult,
                 backdropPath = backdropPath,
                 genreIds = genreIds,
-                id = id,
+                movieId = id,
                 originalLanguage = originalLanguage,
                 originalTitle = originalTitle,
                 overview = overview,

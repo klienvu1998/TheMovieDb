@@ -11,12 +11,11 @@
 
     <ImageView
         android:id="@+id/img_poster"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="0dp"
         android:padding="10dp"
         android:src="@drawable/ic_image_not_supported"
         app:layout_constraintDimensionRatio="H,1:1.5"
-        android:background="?attr/colorPrimary"
         android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +23,7 @@
 
     <TextView
         android:id="@+id/tv_movie_name"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="35dp"
         android:maxLines="2"
         android:ellipsize="end"
@@ -40,7 +39,7 @@
 
     <LinearLayout
         android:id="@+id/rating_container"
-        android:layout_width="110dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"

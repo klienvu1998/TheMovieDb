@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="110dp"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:id="@+id/movie_container"
@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:padding="10dp"
         android:src="@drawable/ic_image_not_supported"
-        app:layout_constraintDimensionRatio="H,1:1.4"
+        app:layout_constraintDimensionRatio="H,1:1.5"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

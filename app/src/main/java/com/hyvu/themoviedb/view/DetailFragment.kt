@@ -44,7 +44,7 @@ class DetailFragment : BaseFragment() {
     }
 
     override fun fetchData() {
-        mViewModel.fetchMovieImages(movieDetail.id)
+        mViewModel.fetchMovieImages(movieDetail.movieId)
     }
 
     override fun inject() {

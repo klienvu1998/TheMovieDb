@@ -19,6 +19,7 @@ import com.hyvu.themoviedb.viewmodel.HomeViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class MoviesHomeFragment : BaseFragment() {
 
@@ -52,11 +53,9 @@ class MoviesHomeFragment : BaseFragment() {
     }
 
     override fun fetchData() {
-        if (isOnline) {
-            mViewModel.fetchTrendingMovies()
-        } else {
-            mViewModel.queryMovie()
-        }
+        listMovieCategory[Genre(-1, TRENDING_MOVIE)] = ArrayList()
+        mViewModel.fetchDatabase()
+        mViewModel.fetchTrendingMovies()
     }
 
     override fun initView() {
@@ -69,12 +68,11 @@ class MoviesHomeFragment : BaseFragment() {
     }
 
     override fun observerLiveData() {
-        mViewModel.genres.observe(this, {
-            it.genres.forEach { mViewModel.insertGenreToDatabase(it) }
+        mViewModel.genres.observe(this, { genres ->
+            mViewModel.getListMovieDetailByGenre(genres)
         })
         mViewModel.listOverviewMovies.observe(this, { data ->
-            data.values.forEach { it -> it.forEach { mViewModel.insertMovieDetailToDatabase(it) } }
-            mBinding.progressBar.visibility = View.GONE
+            if (data.isNotEmpty()) mBinding.progressBar.visibility = View.GONE
             listMovieCategory.putAll(data)
             adapterHomeCategoryMovie?.addMovieData(listMovieCategory)
         })

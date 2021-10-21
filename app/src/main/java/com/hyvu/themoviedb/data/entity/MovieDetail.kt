@@ -10,6 +10,11 @@ import com.hyvu.themoviedb.database.DataConverter
 @TypeConverters(DataConverter::class)
 @Entity(tableName = "movie_detail")
 data class MovieDetail(
+
+    @PrimaryKey(autoGenerate = true)
+    @SerializedName("unique_id")
+    val uniqueId: Long = 0,
+
     @ColumnInfo(name = "adult")
     @SerializedName("adult")
     val adult: Boolean,
@@ -18,14 +23,14 @@ data class MovieDetail(
     @SerializedName("backdrop_path")
     val backdropPath: String?,
 
-    @TypeConverters(DataConverter::class)
     @ColumnInfo(name = "genre_ids")
     @SerializedName("genre_ids")
     val genreIds: List<Int>,
 
-    @PrimaryKey @ColumnInfo(name = "id")
+//    @PrimaryKey
+    @ColumnInfo(name = "movie_id")
     @SerializedName("id")
-    val id: Int,
+    val movieId: Int,
 
     @ColumnInfo(name = "original_language")
     @SerializedName("original_language")
@@ -67,10 +72,12 @@ data class MovieDetail(
     @SerializedName("vote_count")
     val voteCount: Int,
 
-    var isFavorite: Boolean = false
+    var isFavorite: Boolean = false,
+    var isWatchList: Boolean = false
 ) : Parcelable {
     @Suppress("UNREACHABLE_CODE")
     constructor(parcel: Parcel) : this(
+            parcel.readLong(),
             parcel.readByte() != 0.toByte(),
             parcel.readString(),
             TODO("genreIds"),
@@ -85,6 +92,7 @@ data class MovieDetail(
             parcel.readByte() != 0.toByte(),
             parcel.readDouble(),
             parcel.readInt(),
+        parcel.readByte() != 0.toByte(),
         parcel.readByte() != 0.toByte()) {
     }
 
@@ -97,9 +105,10 @@ data class MovieDetail(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(uniqueId)
         parcel.writeByte(if (adult) 1 else 0)
         parcel.writeString(backdropPath)
-        parcel.writeInt(id)
+        parcel.writeInt(movieId)
         parcel.writeString(originalLanguage)
         parcel.writeString(originalTitle)
         parcel.writeString(overview)
@@ -111,6 +120,7 @@ data class MovieDetail(
         parcel.writeDouble(voteAverage)
         parcel.writeInt(voteCount)
         parcel.writeByte(if (isFavorite) 1 else 0)
+        parcel.writeByte(if (isWatchList) 1 else 0)
     }
 
     override fun describeContents(): Int {
@@ -127,3 +137,14 @@ data class MovieDetail(
         }
     }
 }
+
+@Entity(tableName = "remote_keys")
+data class MovieDetailRemoteKey (
+    @PrimaryKey
+    @ColumnInfo(name = "movie_id")
+    val movieId: Int,
+    @ColumnInfo(name = "prev_key")
+    val prevKey: Int?,
+    @ColumnInfo(name = "next_key")
+    val nextKey: Int?
+)

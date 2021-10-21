@@ -3,6 +3,7 @@ package com.hyvu.themoviedb.view.activity
 import android.annotation.SuppressLint
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -86,6 +87,7 @@ class MainActivity : BaseActivity() {
             it.id?.let { it1 ->
                 userManager.accountId = it1
                 mViewModel.fetchFavoriteMovie(it1, userManager.sessionId)
+                mViewModel.fetchWatchList(it1, userManager.sessionId)
             }
         })
     }
@@ -179,7 +181,10 @@ class MainActivity : BaseActivity() {
 
     private val listenerViewMainPagerAdapter = object : ViewPagerMainAdapter.Listener {
         override fun onCreateFragment(position: Int): Fragment {
-            var fragment: Fragment = TikMovieFragment()
+            var fragment: Fragment = HomeContainerFragment()
+            if (!isOnline()) {
+                Toast.makeText(this@MainActivity, "Connect internet to access", Toast.LENGTH_SHORT).show()
+            }
             when (position) {
                 0 -> {
                     fragment = HomeContainerFragment()
@@ -231,7 +236,10 @@ class MainActivity : BaseActivity() {
                 return
             }
         }
-        if (supportFragmentManager.backStackEntryCount > 0) supportFragmentManager.popBackStack()
+        if (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStack()
+            return
+        }
         super.onBackPressed()
     }
 

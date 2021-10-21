@@ -3,6 +3,7 @@ package com.hyvu.themoviedb.database
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.hyvu.themoviedb.data.entity.Genre
 
 object DataConverter {
 
@@ -11,5 +12,4 @@ object DataConverter {
 
     @TypeConverter
     fun jsonToList(value: String): List<Int> = Gson().fromJson<List<Int>>(value, object : TypeToken<List<Int>>() {}.type)
-
 }

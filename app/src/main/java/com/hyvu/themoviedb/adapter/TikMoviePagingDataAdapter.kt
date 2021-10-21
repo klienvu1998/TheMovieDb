@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.api.BASE_IMG_HIGH_QUALITY_URL
 import com.hyvu.themoviedb.data.api.BASE_IMG_LOW_QUALITY_URL
+import com.hyvu.themoviedb.data.entity.Genre
 import com.hyvu.themoviedb.data.entity.Genres
 import com.hyvu.themoviedb.data.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ItemTikmovieBinding
@@ -21,13 +22,13 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 class TikMoviePagingDataAdapter(
         private val context: Context?,
         private val listener: Listener,
-        private val listMovieGenre: Genres
+        private val listMovieGenre: List<Genre>
 ): PagingDataAdapter<MovieDetail, TikMoviePagingDataAdapter.ViewHolder>(REPO_COMPARATOR) {
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<MovieDetail>() {
             override fun areItemsTheSame(oldItem: MovieDetail, newItem: MovieDetail): Boolean =
-                    oldItem.id == newItem.id
+                    oldItem.movieId == newItem.movieId
 
             override fun areContentsTheSame(oldItem: MovieDetail, newItem: MovieDetail): Boolean =
                     oldItem == newItem
@@ -60,7 +61,7 @@ class TikMoviePagingDataAdapter(
             tvReleaseDate.text = movieDetail.releaseDate
             rcvGenres.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = GenresAdapter(context, listMovieGenre.genres.filter { movieDetail.genreIds.contains(it.id) })
+                adapter = GenresAdapter(context, listMovieGenre.filter { movieDetail.genreIds.contains(it.id) })
             }
             Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieDetail.posterPath, imgPoster, R.drawable.ic_image_not_supported)
         }

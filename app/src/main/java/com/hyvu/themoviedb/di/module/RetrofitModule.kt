@@ -1,8 +1,8 @@
 package com.hyvu.themoviedb.di.module
 
-import com.hyvu.themoviedb.data.api.API_KEY
-import com.hyvu.themoviedb.data.api.BASE_URL
-import com.hyvu.themoviedb.data.api.TheMovieDbAPI
+import com.hyvu.themoviedb.data.remote.api.API_KEY
+import com.hyvu.themoviedb.data.remote.api.BASE_URL
+import com.hyvu.themoviedb.data.remote.api.TheMovieDbAPI
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor

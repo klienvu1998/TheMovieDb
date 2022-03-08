@@ -2,10 +2,9 @@ package com.hyvu.themoviedb.di.module
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.hyvu.themoviedb.adapter.UserCategoryAdapter
 import com.hyvu.themoviedb.di.scope.ViewModelKey
-import com.hyvu.themoviedb.viewmodel.*
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import com.hyvu.themoviedb.viewmodel.home.*
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -50,4 +49,9 @@ abstract class MainViewModelModule {
     @IntoMap
     @ViewModelKey(UserViewModel::class)
     abstract fun provideUserViewModel(viewModel: UserViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SharedViewModel::class)
+    abstract fun provideSharedViewModel(viewModel: SharedViewModel): ViewModel
 }

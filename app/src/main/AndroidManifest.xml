@@ -4,7 +4,13 @@
     package="com.hyvu.themoviedb">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <queries>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+    </queries>
 
     <application
         android:name=".MyApplication"
@@ -14,9 +20,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TheMovieDb">
-        <activity android:name=".view.activity.LoginActivity"
-            android:launchMode="singleTask">
-
+        <activity
+            android:name=".view.login.LoginWebViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.login.LoginActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,25 +33,19 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
-                    android:host="www.themoviedb.com"/>
+                    android:path="/auth/v3"
+                    android:scheme="moviebase" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.image.MovieImageActivity" />
         <activity
-            android:name=".view.activity.MovieImageActivity" />
-        <activity
-            android:name=".view.activity.MainActivity"
+            android:name=".view.home.MainActivity"
             android:configChanges="orientation|keyboardHidden" />
     </application>
-    <queries>
-        <intent>
-            <action android:name=
-                "android.support.customtabs.action.CustomTabsService" />
-        </intent>
-    </queries>
 
 </manifest>

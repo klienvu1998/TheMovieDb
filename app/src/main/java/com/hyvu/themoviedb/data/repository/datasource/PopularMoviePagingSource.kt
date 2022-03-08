@@ -2,8 +2,8 @@ package com.hyvu.themoviedb.data.repository.datasource
 
 import androidx.paging.PagingState
 import androidx.paging.rxjava2.RxPagingSource
-import com.hyvu.themoviedb.data.api.TheMovieDbAPI
-import com.hyvu.themoviedb.data.entity.MovieDetail
+import com.hyvu.themoviedb.data.remote.api.TheMovieDbAPI
+import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 

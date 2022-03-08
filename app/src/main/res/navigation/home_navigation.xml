@@ -6,7 +6,7 @@
     app:startDestination="@id/moviesHomeFragment">
     <fragment
         android:id="@+id/moviesHomeFragment"
-        android:name="com.hyvu.themoviedb.view.MoviesHomeFragment"
+        android:name="com.hyvu.themoviedb.view.home.HomeFragment"
         android:label="fragment_movies_home_fragment"
         tools:layout="@layout/fragment_movies_home_fragment" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/moviesByGenreFragment"
-        android:name="com.hyvu.themoviedb.view.MoviesByGenreFragment"
+        android:name="com.hyvu.themoviedb.view.home.MoviesByGenreFragment"
         android:label="MoviesByGenreFragment"
         tools:layout="@layout/fragment_movies_by_genre">
         <action

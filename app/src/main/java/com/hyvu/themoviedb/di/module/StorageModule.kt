@@ -1,7 +1,7 @@
 package com.hyvu.themoviedb.di.module
 
-import com.hyvu.themoviedb.storage.SharedPreferenceData
-import com.hyvu.themoviedb.storage.Storage
+import com.hyvu.themoviedb.utils.SharedPreferenceData
+import com.hyvu.themoviedb.utils.Storage
 import dagger.Binds
 import dagger.Module
 

@@ -33,7 +33,7 @@
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout_detail"
                 android:layout_width="200dp"
-                android:layout_height="35dp"
+                android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:tabTextColor="?attr/colorSecondary"
                 app:layout_constraintTop_toTopOf="parent"
@@ -60,6 +60,7 @@
                 app:layout_constraintTop_toTopOf="@id/tab_layout_detail"
                 app:layout_constraintBottom_toBottomOf="@id/tab_layout_detail"
                 android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_add_playlist"
                 tools:src="@drawable/ic_add_playlist"
                 app:tint="?attr/colorSecondary" />
 

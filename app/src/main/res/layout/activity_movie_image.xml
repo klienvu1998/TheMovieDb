@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.MovieImageActivity">
+    tools:context=".view.image.MovieImageActivity">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/progress_bar"
@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <com.hyvu.themoviedb.ui.ZoomImageView
+    <com.hyvu.themoviedb.view.customview.ZoomImageView
         android:id="@+id/img_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

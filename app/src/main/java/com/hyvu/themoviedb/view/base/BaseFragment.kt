@@ -3,12 +3,16 @@ package com.hyvu.themoviedb.view.base
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import com.hyvu.themoviedb.utils.UserManager
+import com.hyvu.themoviedb.view.home.MainActivity
 
 abstract class BaseFragment: Fragment() {
 
     val isOnline by lazy { (activity as BaseActivity).isOnline() }
+    val userManager: UserManager by lazy {
+        (context as MainActivity).userManager
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

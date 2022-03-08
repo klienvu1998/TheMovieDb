@@ -4,7 +4,6 @@ import android.content.Context
 import com.hyvu.themoviedb.di.module.HomeMovieDatabaseModule
 import com.hyvu.themoviedb.di.module.RetrofitModule
 import com.hyvu.themoviedb.di.module.StorageModule
-import com.hyvu.themoviedb.user.UserManager
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

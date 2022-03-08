@@ -9,6 +9,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
@@ -68,10 +69,9 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if ((application as MyApplication).userManager.isNightMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         inject()
         super.onCreate(savedInstanceState)
+        Log.d("OnCreate", "Entry")
         setContentView(getLayoutId())
         getBundle()
         fetchData()
@@ -81,6 +81,7 @@ abstract class BaseActivity: AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        Log.d("onStart", "Entry")
         registerNetworkReceiver()
     }
 
@@ -88,6 +89,7 @@ abstract class BaseActivity: AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        Log.d("onStop", "Entry")
         unregisterNetworkReceiver()
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }

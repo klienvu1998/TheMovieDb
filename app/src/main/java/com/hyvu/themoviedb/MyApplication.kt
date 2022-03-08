@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.hyvu.themoviedb.di.AppComponent
 import com.hyvu.themoviedb.di.DaggerAppComponent
-import com.hyvu.themoviedb.storage.SharedPreferenceData
-import com.hyvu.themoviedb.user.UserManager
+import com.hyvu.themoviedb.utils.SharedPreferenceData
+import com.hyvu.themoviedb.utils.UserManager
 
 open class MyApplication: Application() {
 
@@ -18,6 +18,8 @@ open class MyApplication: Application() {
     }
 
     override fun onCreate() {
+        if (userManager.isNightMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         super.onCreate()
     }
 }

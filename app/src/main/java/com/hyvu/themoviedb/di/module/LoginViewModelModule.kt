@@ -3,8 +3,7 @@ package com.hyvu.themoviedb.di.module
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.hyvu.themoviedb.di.scope.ViewModelKey
-import com.hyvu.themoviedb.viewmodel.HomeViewModel
-import com.hyvu.themoviedb.viewmodel.LoginViewModel
+import com.hyvu.themoviedb.viewmodel.login.LoginViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import dagger.Binds
 import dagger.Module

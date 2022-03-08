@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_weight="2"
-    tools:context=".view.UserSettingsFragment">
+    tools:context=".view.home.UserSettingsFragment">
 
     <include layout="@layout/layout_tool_bar"
         android:id="@+id/tool_bar_container"/>

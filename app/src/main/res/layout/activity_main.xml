@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hyvu.themoviedb.ui.MyMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.hyvu.themoviedb.view.customview.MyMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/motion_layout"
@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="?attr/colorPrimary"
     app:layoutDescription="@xml/activity_main_scene"
-    tools:context=".view.activity.MainActivity">
+    tools:context=".view.home.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tool_bar"
@@ -29,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tool_bar"
             app:layout_constraintStart_toStartOf="@id/tool_bar"
             android:scaleType="fitCenter" />
-        
+
         <ImageView
             android:id="@+id/btn_user_setting"
             android:layout_width="35dp"
@@ -67,7 +67,7 @@
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textSize="17sp"
         android:paddingHorizontal="10dp"
@@ -95,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="@id/youtube_view_container"
         android:layout_marginEnd="10dp"
         android:src="@drawable/ic_close"
-        android:tint="?attr/colorSecondary"/>
+        app:tint="?attr/colorSecondary" />
 
     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
         android:id="@+id/youtube_view"
@@ -130,4 +130,4 @@
         android:background="?attr/colorPrimary"
         app:layout_constraintTop_toBottomOf="parent"/>
 
-</com.hyvu.themoviedb.ui.MyMotionLayout>
+</com.hyvu.themoviedb.view.customview.MyMotionLayout>

@@ -37,10 +37,6 @@ class LoginActivity : BaseActivity() {
     @Inject
     lateinit var providerFactory: MainViewModelFactory
 
-    private val userManager: UserManager by lazy {
-        (application as MyApplication).userManager
-    }
-
     private val mViewModel by lazy {
         ViewModelProvider(this, providerFactory)[LoginViewModel::class.java]
     }

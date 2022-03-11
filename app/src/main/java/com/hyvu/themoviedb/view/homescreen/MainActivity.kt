@@ -26,10 +26,6 @@ import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
-    val userManager: UserManager by lazy {
-        (application as MyApplication).userManager
-    }
-
     @Inject
     lateinit var providerFactory: MainViewModelFactory
     private val mViewModel: MainViewModel by lazy {

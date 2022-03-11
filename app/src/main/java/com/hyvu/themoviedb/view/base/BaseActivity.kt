@@ -17,9 +17,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.hyvu.themoviedb.MyApplication
 import com.hyvu.themoviedb.R
+import com.hyvu.themoviedb.utils.UserManager
 
 abstract class BaseActivity: AppCompatActivity() {
     private lateinit var receiver: NetworkReceiver
+
+    val userManager: UserManager by lazy {
+        (application as MyApplication).userManager
+    }
 
     fun isOnline(): Boolean {
         val connMgr = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

@@ -1,8 +1,8 @@
 package com.hyvu.themoviedb.di.scope
 
-import com.hyvu.themoviedb.view.login.LoginActivity
-import com.hyvu.themoviedb.view.home.MainActivity
-import com.hyvu.themoviedb.view.image.MovieImageActivity
+import com.hyvu.themoviedb.view.loginscreen.LoginActivity
+import com.hyvu.themoviedb.view.homescreen.MainActivity
+import com.hyvu.themoviedb.view.imagescreen.MovieImageActivity
 import dagger.Subcomponent
 
 @ActivityScope

@@ -1,7 +1,7 @@
 package com.hyvu.themoviedb.di
 
 import com.hyvu.themoviedb.di.scope.ActivityScope
-import com.hyvu.themoviedb.view.image.MovieImageActivity
+import com.hyvu.themoviedb.view.imagescreen.MovieImageActivity
 import dagger.Subcomponent
 
 @ActivityScope

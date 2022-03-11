@@ -21,10 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TheMovieDb">
         <activity
-            android:name=".view.login.LoginWebViewActivity"
+            android:name=".view.loginscreen.LoginWebViewActivity"
             android:exported="false" />
         <activity
-            android:name=".view.login.LoginActivity"
+            android:name=".view.loginscreen.LoginActivity"
             android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,9 +42,9 @@
                     android:scheme="moviebase" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.image.MovieImageActivity" />
+        <activity android:name=".view.imagescreen.MovieImageActivity" />
         <activity
-            android:name=".view.home.MainActivity"
+            android:name=".view.homescreen.MainActivity"
             android:configChanges="orientation|keyboardHidden" />
     </application>
 

@@ -7,7 +7,7 @@ import com.hyvu.themoviedb.data.remote.api.TheMovieDbAPI
 import com.hyvu.themoviedb.data.remote.entity.*
 import com.hyvu.themoviedb.data.repository.MovieRepository
 import com.hyvu.themoviedb.data.local.database.HomeDatabase
-import com.hyvu.themoviedb.view.home.HomeFragment
+import com.hyvu.themoviedb.view.homescreen.HomeFragment
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

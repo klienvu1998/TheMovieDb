@@ -2,8 +2,8 @@ package com.hyvu.themoviedb.di
 
 import com.hyvu.themoviedb.di.module.MainViewModelModule
 import com.hyvu.themoviedb.di.scope.ActivityScope
-import com.hyvu.themoviedb.view.home.UserSettingsFragment
-import com.hyvu.themoviedb.view.home.*
+import com.hyvu.themoviedb.view.homescreen.UserSettingsFragment
+import com.hyvu.themoviedb.view.homescreen.*
 import dagger.Subcomponent
 
 @ActivityScope

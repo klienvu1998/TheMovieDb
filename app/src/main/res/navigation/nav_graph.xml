@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.hyvu.themoviedb.view.home.HomeContainerFragment"
+        android:name="com.hyvu.themoviedb.view.homescreen.HomeContainerFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home_container"/>
 
     <fragment
         android:id="@+id/tikmovie_fragment"
-        android:name="com.hyvu.themoviedb.view.home.TikMovieFragment"
+        android:name="com.hyvu.themoviedb.view.homescreen.TikMovieFragment"
         android:label="TikMovie"
         tools:layout="@layout/fragment_tikmovie"/>
 
     <fragment
         android:id="@+id/user_fragment"
-        android:name="com.hyvu.themoviedb.view.home.UserFragment"
+        android:name="com.hyvu.themoviedb.view.homescreen.UserFragment"
         android:label="User"
         tools:layout="@layout/fragment_user"/>
 

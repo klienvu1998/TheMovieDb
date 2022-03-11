@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import com.hyvu.themoviedb.utils.UserManager
-import com.hyvu.themoviedb.view.home.MainActivity
+import com.hyvu.themoviedb.view.homescreen.MainActivity
 
 abstract class BaseFragment: Fragment() {
 

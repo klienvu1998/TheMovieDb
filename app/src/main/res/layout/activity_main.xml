@@ -8,7 +8,7 @@
     android:fitsSystemWindows="true"
     android:background="?attr/colorPrimary"
     app:layoutDescription="@xml/activity_main_scene"
-    tools:context=".view.home.MainActivity">
+    tools:context=".view.homescreen.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tool_bar"

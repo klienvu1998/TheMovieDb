@@ -2,7 +2,7 @@ package com.hyvu.themoviedb.di
 
 import com.hyvu.themoviedb.di.module.LoginViewModelModule
 import com.hyvu.themoviedb.di.scope.ActivityScope
-import com.hyvu.themoviedb.view.login.LoginActivity
+import com.hyvu.themoviedb.view.loginscreen.LoginActivity
 import dagger.Subcomponent
 
 @ActivityScope

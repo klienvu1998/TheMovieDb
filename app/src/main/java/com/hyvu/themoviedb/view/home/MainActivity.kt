@@ -3,14 +3,12 @@ package com.hyvu.themoviedb.view.home
 import android.annotation.SuppressLint
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.constraintlayout.motion.widget.MotionLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
 import com.hyvu.themoviedb.MyApplication
 import com.hyvu.themoviedb.R
-import com.hyvu.themoviedb.view.home.adapter.ViewPagerMainAdapter
 import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
 import com.hyvu.themoviedb.di.MainComponent
@@ -45,7 +43,6 @@ class MainActivity : BaseActivity() {
     lateinit var mainComponent: MainComponent
 
     private lateinit var mBinding: ActivityMainBinding
-    private lateinit var viewPagerMainMainAdapter: ViewPagerMainAdapter
     private var ytbPlayer: YouTubePlayer? = null
 
     override fun getBundle() {
@@ -73,7 +70,6 @@ class MainActivity : BaseActivity() {
         initYoutube()
         initUserSettings()
         mBinding.tvTitle.isSelected = true
-        mBinding.viewPagerContainer.isUserInputEnabled = false
         mBinding.btnClose.setOnClickListener {
             ytbPlayer?.pause()
             mBinding.motionLayout.transitionToState(R.id.hide)
@@ -95,21 +91,8 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initTabLayoutMain() {
-        viewPagerMainMainAdapter = ViewPagerMainAdapter(this, listenerViewMainPagerAdapter)
-        mBinding.viewPagerContainer.adapter = viewPagerMainMainAdapter
-        TabLayoutMediator(mBinding.tabLayout, mBinding.viewPagerContainer) { tab, position ->
-            when (position) {
-                0 -> {
-                    tab.text = "Home"
-                }
-                1 -> {
-                    tab.text = "TikMovie"
-                }
-                2 -> {
-                    tab.text = "User"
-                }
-            }
-        }.attach()
+        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        NavigationUI.setupWithNavController(mBinding.tabLayout, navController)
     }
 
     private fun initMotionLayout() {
@@ -179,27 +162,6 @@ class MainActivity : BaseActivity() {
             }
 
         })
-    }
-
-    private val listenerViewMainPagerAdapter = object : ViewPagerMainAdapter.Listener {
-        override fun onCreateFragment(position: Int): Fragment {
-            var fragment: Fragment = HomeContainerFragment()
-            if (!isOnline()) {
-                Toast.makeText(this@MainActivity, "Connect internet to access", Toast.LENGTH_SHORT).show()
-            }
-            when (position) {
-                0 -> {
-                    fragment = HomeContainerFragment()
-                }
-                1 -> {
-                    fragment = TikMovieFragment()
-                }
-                2 -> {
-                    fragment = UserFragment()
-                }
-            }
-            return fragment
-        }
     }
 
     fun showMovieDetails(movieDetail: MovieDetail) {

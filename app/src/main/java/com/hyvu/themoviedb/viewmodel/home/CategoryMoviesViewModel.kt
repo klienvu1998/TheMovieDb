@@ -25,7 +25,6 @@ class CategoryMoviesViewModel @Inject constructor(val repository: MovieRepositor
     private val _responseMovies: MutableLiveData<PagingData<MovieDetail>> = MutableLiveData()
     val responseMovies: LiveData<PagingData<MovieDetail>> = _responseMovies
 
-    @ExperimentalPagingApi
     fun getMovieByGenre(genreId: Int) {
         compositeDisposable.add(
                 repository.fetchMovieByGenre(genreId) {

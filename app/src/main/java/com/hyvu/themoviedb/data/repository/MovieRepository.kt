@@ -27,7 +27,6 @@ class MovieRepository @Inject constructor(private val apiService: TheMovieDbAPI,
     var currentMovieDetail: MovieDetail? = null
     var genres: ArrayList<Genre> = ArrayList()
 
-    @ExperimentalPagingApi
     fun fetchMovieByGenre(genreId: Int, onGetMovieDetails: (List<MovieDetail>) -> Unit): Flowable<PagingData<MovieDetail>> {
         return Pager(
             config = PagingConfig(

@@ -64,7 +64,6 @@ class MoviesByGenreFragment : BaseFragment() {
         genre = arguments?.getParcelable(ARG_GENRE)!!
     }
 
-    @ExperimentalPagingApi
     override fun fetchData() {
         if (isOnline) {
             if (genre.name != "Favorite" && genre.name != "Watchlist") {
@@ -97,7 +96,6 @@ class MoviesByGenreFragment : BaseFragment() {
         }
     }
 
-    @ExperimentalPagingApi
     override fun observerLiveData() {
         when (genre.name) {
             "Watchlist" -> {

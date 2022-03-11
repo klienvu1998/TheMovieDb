@@ -17,6 +17,7 @@ import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.HomeViewModel
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
 
@@ -56,7 +57,12 @@ class HomeFragment : BaseFragment() {
 
     override fun fetchData() {
         if (isOnline) {
-            mSharedViewModel.fetchUserData(userManager.accountId ?: 0, userManager.sessionId)
+            val sessionId = userManager.sessionId
+            if (sessionId.isEmpty()) {
+                mViewModel.fetchMovies()
+            } else {
+                mSharedViewModel.fetchUserData(userManager.accountId ?: 0, userManager.sessionId)
+            }
         } else {
             mViewModel.fetchMoviesDatabase()
         }
@@ -64,7 +70,7 @@ class HomeFragment : BaseFragment() {
 
     override fun initView() {
         mBinding.rcvCategory.apply {
-            adapterHomeCategoryMovie = HomeCategoryMovieAdapter(context, listenerHomeCategoryAdapter, LinkedHashMap())
+            adapterHomeCategoryMovie = HomeCategoryMovieAdapter(WeakReference(context), listenerHomeCategoryAdapter, LinkedHashMap())
             adapterHomeCategoryMovie?.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
             val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             layoutManager = linearLayoutManager

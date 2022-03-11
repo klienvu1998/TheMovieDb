@@ -10,11 +10,15 @@ import com.hyvu.themoviedb.data.remote.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.remote.entity.Credits
 import com.hyvu.themoviedb.databinding.ItemCreditBinding
 import com.hyvu.themoviedb.utils.Utils
+import java.lang.ref.WeakReference
 
 class MovieCreditAdapter(
-    private val context: Context?,
+    private val weakContext: WeakReference<Context>,
     private var credit: Credits
 ): RecyclerView.Adapter<MovieCreditAdapter.ViewHolder>() {
+
+    private val context = weakContext.get()
+
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val mBinding = ItemCreditBinding.bind(view)
     }

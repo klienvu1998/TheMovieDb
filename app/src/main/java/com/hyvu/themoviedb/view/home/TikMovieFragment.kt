@@ -13,6 +13,7 @@ import com.hyvu.themoviedb.databinding.FragmentTikmovieBinding
 import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.TikMovieViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class TikMovieFragment : BaseFragment() {
@@ -47,7 +48,7 @@ class TikMovieFragment : BaseFragment() {
 
     override fun initView() {
         mBinding.rcvMovie.apply {
-            tikMoviePagingDataAdapter = TikMoviePagingDataAdapter(context, listenerTikMovieViewPagerAdapter, mViewModel.movieGenres)
+            tikMoviePagingDataAdapter = TikMoviePagingDataAdapter(WeakReference(context), listenerTikMovieViewPagerAdapter, mViewModel.movieGenres)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             PagerSnapHelper().attachToRecyclerView(this)
             adapter = tikMoviePagingDataAdapter

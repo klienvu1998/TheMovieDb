@@ -12,14 +12,18 @@ import com.hyvu.themoviedb.data.remote.api.BASE_IMG_MEDIUM_QUALITY_URL
 import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.utils.Utils
 import com.hyvu.themoviedb.view.home.MainActivity
+import java.lang.ref.WeakReference
 
 class ViewPagerSliderAdapter(
-        private val context: Context?,
+        private val weakContext: WeakReference<Context>,
         private val listSliderViewPagerItem: List<MovieDetail>?,
         private val listener: Listener,
 ): RecyclerView.Adapter<ViewPagerSliderAdapter.ViewHolder>() {
 
+    private val context = weakContext.get()
+
     interface Listener {
+
     }
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {

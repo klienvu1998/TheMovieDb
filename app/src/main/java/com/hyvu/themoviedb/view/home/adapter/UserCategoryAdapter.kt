@@ -10,12 +10,15 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.remote.entity.Genre
 import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ItemCategoryBinding
+import java.lang.ref.WeakReference
 
 class UserCategoryAdapter(
-    private val context: Context?,
+    private val weakContext: WeakReference<Context>,
     private val listener: Listener,
     private var listMovie: Map<Genre, List<MovieDetail>>
 ): RecyclerView.Adapter<UserCategoryAdapter.ViewHolder>() {
+
+    private val context = weakContext.get()
 
     interface Listener {
         fun onClickedSeeAll(genre: Genre)
@@ -42,7 +45,7 @@ class UserCategoryAdapter(
             containerSeeAll.setOnClickListener {
                 listener.onClickedSeeAll(movie)
             }
-            val adapter = HomeCategoryMovieChildAdapter(context, listMovie[movie])
+            val adapter = HomeCategoryMovieChildAdapter(WeakReference(context), listMovie[movie])
             rcvMovie.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             rcvMovie.adapter = adapter
         }

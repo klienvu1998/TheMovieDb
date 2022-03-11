@@ -12,6 +12,7 @@ import com.hyvu.themoviedb.databinding.FragmentCastBinding
 import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.MovieInfoViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class CastFragment : BaseFragment() {
@@ -51,7 +52,7 @@ class CastFragment : BaseFragment() {
         mViewModel.movieCredits.observe(this, { credits ->
             mBinding.rcvCast.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = MovieCreditAdapter(context, credits)
+                adapter = MovieCreditAdapter(WeakReference(context), credits)
             }
         })
     }

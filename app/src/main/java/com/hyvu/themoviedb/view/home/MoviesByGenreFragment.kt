@@ -18,6 +18,7 @@ import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.CategoryMoviesViewModel
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MoviesByGenreFragment : BaseFragment() {
@@ -79,7 +80,7 @@ class MoviesByGenreFragment : BaseFragment() {
         mBinding.toolBarContainer.btnBack.setOnClickListener {
             parentFragment?.childFragmentManager?.popBackStack()
         }
-        moviePagingDataAdapter = MoviesPagingDataAdapter(context)
+        moviePagingDataAdapter = MoviesPagingDataAdapter(WeakReference(context))
         mBinding.rcvMovie.apply {
             val displayMetrics = DisplayMetrics()
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -100,7 +101,7 @@ class MoviesByGenreFragment : BaseFragment() {
         when (genre.name) {
             "Watchlist" -> {
                 mSharedViewModel.watchList.observe(viewLifecycleOwner, { movieDetails ->
-                    movieGridAdapter = MovieGridAdapter(context, movieDetails)
+                    movieGridAdapter = MovieGridAdapter(WeakReference(context), movieDetails)
                     mBinding.rcvMovie.apply {
                         val displayMetrics = DisplayMetrics()
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
@@ -121,7 +122,7 @@ class MoviesByGenreFragment : BaseFragment() {
             }
             "Favorite" -> {
                 mSharedViewModel.favoriteList.observe(viewLifecycleOwner, { movieDetails ->
-                    movieGridAdapter = MovieGridAdapter(context, movieDetails)
+                    movieGridAdapter = MovieGridAdapter(WeakReference(context), movieDetails)
                     mBinding.rcvMovie.apply {
                         val displayMetrics = DisplayMetrics()
                         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {

@@ -15,6 +15,7 @@ import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.home.UserViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class UserHomeFragment: BaseFragment() {
@@ -47,7 +48,7 @@ class UserHomeFragment: BaseFragment() {
     }
 
     override fun initView() {
-        adapterCategoryMovie = UserCategoryAdapter(context, userCategoryAdapterListener, LinkedHashMap())
+        adapterCategoryMovie = UserCategoryAdapter(WeakReference(context), userCategoryAdapterListener, LinkedHashMap())
         mBinding.rcvMovie.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = adapterCategoryMovie

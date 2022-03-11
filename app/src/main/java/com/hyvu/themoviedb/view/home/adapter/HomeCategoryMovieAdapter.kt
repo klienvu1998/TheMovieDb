@@ -13,16 +13,18 @@ import com.hyvu.themoviedb.data.remote.entity.*
 import com.hyvu.themoviedb.databinding.ItemBannerBinding
 import com.hyvu.themoviedb.databinding.ItemCategoryBinding
 import com.hyvu.themoviedb.view.home.HomeFragment
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.math.abs
 
 class HomeCategoryMovieAdapter(
-    private val context: Context?,
+    private val weakContext: WeakReference<Context>,
     private val listener: Listener,
     private var mapMovieCategories: LinkedHashMap<Genre, List<MovieDetail>>,
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val context = weakContext.get()
     private val viewPool = RecyclerView.RecycledViewPool()
     private val scrollStates = hashMapOf<Genre, Parcelable?>()
 
@@ -74,7 +76,7 @@ class HomeCategoryMovieAdapter(
                 containerSeeAll.setOnClickListener {
 //                    listener.onClickedTrending()
                 }
-                val adapterViewPagerSlider = ViewPagerSliderAdapter(context, mapMovieCategories[genre]?.filterTo(
+                val adapterViewPagerSlider = ViewPagerSliderAdapter(WeakReference(context), mapMovieCategories[genre]?.filterTo(
                         LinkedList<MovieDetail>(), { movie -> movie.backdropPath != null && movie.backdropPath.isNotEmpty() }), listenerViewPagerSliderAdapter
                 )
                 viewPagerTrending.apply {
@@ -103,7 +105,7 @@ class HomeCategoryMovieAdapter(
                     layoutManager.scrollToPosition(0)
                 }
                 rcvMovie.layoutManager = layoutManager
-                val adapter = HomeCategoryMovieChildAdapter(context, mapMovieCategories[genre])
+                val adapter = HomeCategoryMovieChildAdapter(WeakReference(context), mapMovieCategories[genre])
                 adapter.stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
                 rcvMovie.adapter = adapter
                 rcvMovie.setRecycledViewPool(viewPool)

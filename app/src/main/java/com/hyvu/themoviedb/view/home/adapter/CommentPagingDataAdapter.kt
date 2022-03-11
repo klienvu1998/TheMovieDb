@@ -12,11 +12,14 @@ import com.hyvu.themoviedb.data.remote.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.remote.entity.Comment
 import com.hyvu.themoviedb.databinding.ItemCommentBinding
 import com.hyvu.themoviedb.utils.Utils
+import java.lang.ref.WeakReference
 
 class CommentPagingDataAdapter(
-    private val context: Context?,
+    private val weakContext: WeakReference<Context>,
 ): PagingDataAdapter<Comment, CommentPagingDataAdapter.ViewHolder>(
     REPO_COMPARATOR) {
+
+    val context = weakContext.get()
 
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<Comment>() {

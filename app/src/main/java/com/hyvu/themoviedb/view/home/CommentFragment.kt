@@ -13,6 +13,7 @@ import com.hyvu.themoviedb.databinding.FragmentCommentBinding
 import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.CommentViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class CommentFragment : BaseFragment() {
@@ -50,7 +51,7 @@ class CommentFragment : BaseFragment() {
     override fun initView() {
         mBinding.rcvComment.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            commentPagingDataAdapter = CommentPagingDataAdapter(context)
+            commentPagingDataAdapter = CommentPagingDataAdapter(WeakReference(context))
             adapter = commentPagingDataAdapter
         }
         mBinding.toolBar.apply {

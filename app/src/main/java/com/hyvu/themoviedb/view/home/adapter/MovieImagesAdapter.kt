@@ -10,11 +10,14 @@ import com.hyvu.themoviedb.data.remote.api.BASE_IMG_MEDIUM_QUALITY_URL
 import com.hyvu.themoviedb.data.remote.entity.Backdrop
 import com.hyvu.themoviedb.databinding.ItemImageBinding
 import com.hyvu.themoviedb.utils.Utils
+import java.lang.ref.WeakReference
 
 class MovieImagesAdapter(
-    private val context: Context?,
+    private val weakContext: WeakReference<Context>,
     private val listener: Listener,
 ): RecyclerView.Adapter<MovieImagesAdapter.ViewHolder>() {
+
+    private val context = weakContext.get()
 
     interface Listener {
         fun onImageClicked(backdrops: List<Backdrop>, position: Int)

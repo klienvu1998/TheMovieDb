@@ -11,11 +11,14 @@ import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ItemPosterBinding
 import com.hyvu.themoviedb.utils.Utils
 import com.hyvu.themoviedb.view.home.MainActivity
+import java.lang.ref.WeakReference
 
 class HomeCategoryMovieChildAdapter(
-        private val context: Context?,
+        private val weakContext: WeakReference<Context>,
         private val listMovieDetails: List<MovieDetail>?,
 ): RecyclerView.Adapter<HomeCategoryMovieChildAdapter.ViewHolder>() {
+
+    private val context = weakContext.get()
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val mBinding = ItemPosterBinding.bind(view)

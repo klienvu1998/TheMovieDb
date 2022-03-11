@@ -8,11 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.remote.entity.Genre
+import java.lang.ref.WeakReference
 
 class GenresAdapter(
-    private val context: Context?,
+    private val weakContext: WeakReference<Context>,
     private val listGenres: List<Genre>
 ): RecyclerView.Adapter<GenresAdapter.ViewHolder>() {
+
+    private val context = weakContext.get()
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val tvGenre: TextView = view.findViewById(R.id.tv_genre)

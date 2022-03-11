@@ -21,6 +21,7 @@ import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.MovieInfoViewModel
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class MovieInfoFragment: BaseFragment() {
@@ -178,7 +179,7 @@ class MovieInfoFragment: BaseFragment() {
             Utils.loadGlideImage(context, BASE_IMG_LOW_QUALITY_URL, movieFullDetails.posterPath, imgPoster, R.drawable.ic_image_not_supported)
             rcvGenres.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-                adapter = GenresAdapter(context, movieFullDetails.genres)
+                adapter = GenresAdapter(WeakReference(context), movieFullDetails.genres)
             }
         }
     }

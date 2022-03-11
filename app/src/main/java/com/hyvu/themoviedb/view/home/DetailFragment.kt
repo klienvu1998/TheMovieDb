@@ -19,6 +19,7 @@ import com.hyvu.themoviedb.view.base.BaseFragment
 import com.hyvu.themoviedb.viewmodel.home.MovieInfoViewModel
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import java.lang.ref.WeakReference
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -61,12 +62,12 @@ class DetailFragment : BaseFragment() {
     override fun initView() {
         mBinding.rcvMoreVideos.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            movieVideosAdapter = MovieVideosAdapter(context, listenerMovieVideosAdapter)
+            movieVideosAdapter = MovieVideosAdapter(WeakReference(context), listenerMovieVideosAdapter)
             adapter = movieVideosAdapter
         }
         mBinding.rcvMoreImages.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            movieImagesAdapter = MovieImagesAdapter(context, listenerMovieImagesAdapter)
+            movieImagesAdapter = MovieImagesAdapter(WeakReference(context), listenerMovieImagesAdapter)
             adapter = movieImagesAdapter
         }
     }

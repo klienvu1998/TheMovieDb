@@ -12,11 +12,14 @@ import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.remote.entity.MovieVideoDetail
 import com.hyvu.themoviedb.utils.Constraints
 import com.hyvu.themoviedb.utils.Utils
+import java.lang.ref.WeakReference
 
 class MovieVideosAdapter(
-        private val context: Context?,
+        private val weakContext: WeakReference<Context>,
         private val listener: Listener
 ): RecyclerView.Adapter<MovieVideosAdapter.ViewBinder>() {
+
+    private val context = weakContext.get()
 
     interface Listener {
         fun onItemClicked(videoDetail: MovieVideoDetail)

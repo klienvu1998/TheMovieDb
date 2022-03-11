@@ -55,6 +55,9 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
         )
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 
 }

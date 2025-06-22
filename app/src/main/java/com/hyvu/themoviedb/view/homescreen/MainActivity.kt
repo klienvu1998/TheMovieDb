@@ -1,19 +1,15 @@
 package com.hyvu.themoviedb.view.homescreen
 
 import android.annotation.SuppressLint
-import android.view.View
 import android.view.WindowManager
 import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.hyvu.themoviedb.MyApplication
 import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.ActivityMainBinding
 import com.hyvu.themoviedb.di.MainComponent
-import com.hyvu.themoviedb.utils.UserManager
-import com.hyvu.themoviedb.view.*
 import com.hyvu.themoviedb.view.base.BaseActivity
 import com.hyvu.themoviedb.viewmodel.home.MainViewModel
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
@@ -21,23 +17,23 @@ import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import javax.inject.Inject
+import androidx.navigation.findNavController
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
     private val mViewModel: MainViewModel by lazy {
-        ViewModelProvider(this, providerFactory).get(MainViewModel::class.java)
+        ViewModelProvider(this, providerFactory)[MainViewModel::class.java]
     }
 
     private val mSharedViewModel: SharedViewModel by lazy {
-        ViewModelProvider(this, providerFactory).get(SharedViewModel::class.java)
+        ViewModelProvider(this, providerFactory)[SharedViewModel::class.java]
     }
 
     lateinit var mainComponent: MainComponent
 
-    private lateinit var mBinding: ActivityMainBinding
     private var ytbPlayer: YouTubePlayer? = null
 
     override fun getBundle() {
@@ -53,9 +49,8 @@ class MainActivity : BaseActivity() {
         mainComponent.inject(this)
     }
 
-    override fun getLayoutId(): View {
-        mBinding = ActivityMainBinding.inflate(layoutInflater)
-        return mBinding.root
+    override fun getViewBinding(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
     }
 
     override fun initView() {
@@ -86,7 +81,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initTabLayoutMain() {
-        val navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        val navController = this.findNavController(R.id.nav_host_fragment)
         NavigationUI.setupWithNavController(mBinding.tabLayout, navController)
     }
 

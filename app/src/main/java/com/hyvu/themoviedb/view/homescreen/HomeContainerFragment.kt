@@ -12,7 +12,7 @@ import com.hyvu.themoviedb.viewmodel.home.HomeViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import javax.inject.Inject
 
-class HomeContainerFragment : BaseFragment() {
+class HomeContainerFragment : BaseFragment<FragmentHomeContainerBinding>() {
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
@@ -20,15 +20,11 @@ class HomeContainerFragment : BaseFragment() {
         ViewModelProvider(this, providerFactory)[HomeViewModel::class.java]
     }
 
-    private lateinit var mBinding: FragmentHomeContainerBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val v = inflater.inflate(R.layout.fragment_home_container, container, false)
-        mBinding = FragmentHomeContainerBinding.bind(v)
-        return mBinding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentHomeContainerBinding {
+        return FragmentHomeContainerBinding.inflate(inflater, container, false)
     }
 
     override fun inject() {

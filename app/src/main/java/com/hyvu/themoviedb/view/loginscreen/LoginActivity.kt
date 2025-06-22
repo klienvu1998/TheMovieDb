@@ -27,7 +27,7 @@ import com.hyvu.themoviedb.viewmodel.login.LoginViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import javax.inject.Inject
 
-class LoginActivity : BaseActivity() {
+class LoginActivity: BaseActivity<ActivityLoginBinding>() {
 
     companion object {
         @SuppressLint("ConstantLocale")
@@ -42,7 +42,6 @@ class LoginActivity : BaseActivity() {
     }
 
     lateinit var loginComponent: LoginComponent
-    private lateinit var mBinding: ActivityLoginBinding
     private var mLandingImageView: ArrayList<ImageView> = ArrayList()
     private var anim: ObjectAnimator? = null
     private var mAnimationStatus: AnimationStatus? = null
@@ -68,9 +67,8 @@ class LoginActivity : BaseActivity() {
         loginComponent.inject(this)
     }
 
-    override fun getLayoutId(): View {
-        mBinding = ActivityLoginBinding.inflate(layoutInflater)
-        return mBinding.root
+    override fun getViewBinding(): ActivityLoginBinding {
+        return ActivityLoginBinding.inflate(layoutInflater)
     }
 
     override fun initView() {

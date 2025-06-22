@@ -23,9 +23,8 @@ import java.lang.ref.WeakReference
 import java.util.ArrayList
 import javax.inject.Inject
 
-class DetailFragment : BaseFragment() {
+class DetailFragment : BaseFragment<FragmentDetailBinding>() {
 
-    private lateinit var mBinding: FragmentDetailBinding
     @Inject
     lateinit var providerFactory: MainViewModelFactory
     private val mViewModel by lazy {
@@ -38,13 +37,11 @@ class DetailFragment : BaseFragment() {
     private var movieVideosAdapter: MovieVideosAdapter? = null
     private var movieImagesAdapter: MovieImagesAdapter? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val v = inflater.inflate(R.layout.fragment_detail, container, false)
-        mBinding = FragmentDetailBinding.bind(v)
-        return mBinding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentDetailBinding {
+        return FragmentDetailBinding.inflate(inflater, container, false)
     }
 
     override fun fetchData() {

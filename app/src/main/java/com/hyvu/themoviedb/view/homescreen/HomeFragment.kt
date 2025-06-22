@@ -21,13 +21,11 @@ import java.lang.ref.WeakReference
 import java.util.*
 import javax.inject.Inject
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseFragment<FragmentMoviesHomeFragmentBinding>() {
 
     companion object {
         const val TRENDING_MOVIE = "TRENDING_MOVIE"
     }
-
-    private lateinit var mBinding: FragmentMoviesHomeFragmentBinding
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
@@ -40,15 +38,15 @@ class HomeFragment : BaseFragment() {
 
     private var adapterHomeCategoryMovie: HomeCategoryMovieAdapter? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        val v = inflater.inflate(R.layout.fragment_movies_home_fragment, container, false)
-        mBinding = FragmentMoviesHomeFragmentBinding.bind(v)
-        return mBinding.root
-    }
-
     override fun inject() {
         (activity as MainActivity).mainComponent.inject(this)
+    }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMoviesHomeFragmentBinding {
+        return FragmentMoviesHomeFragmentBinding.inflate(inflater, container, false)
     }
 
     override fun getBundle() {

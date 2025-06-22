@@ -1,37 +1,32 @@
 package com.hyvu.themoviedb.view.homescreen
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
-import com.hyvu.themoviedb.R
-import com.hyvu.themoviedb.view.homescreen.adapter.TikMoviePagingDataAdapter
 import com.hyvu.themoviedb.databinding.FragmentTikmovieBinding
 import com.hyvu.themoviedb.view.base.BaseFragment
-import com.hyvu.themoviedb.viewmodel.home.TikMovieViewModel
+import com.hyvu.themoviedb.view.homescreen.adapter.TikMoviePagingDataAdapter
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
+import com.hyvu.themoviedb.viewmodel.home.TikMovieViewModel
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class TikMovieFragment : BaseFragment() {
+class TikMovieFragment : BaseFragment<FragmentTikmovieBinding>() {
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
-    private lateinit var mBinding: FragmentTikmovieBinding
     private val mViewModel by lazy {
         ViewModelProvider(this, providerFactory).get(TikMovieViewModel::class.java)
     }
     private var tikMoviePagingDataAdapter: TikMoviePagingDataAdapter? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        mBinding = FragmentTikmovieBinding.bind(inflater.inflate(R.layout.fragment_tikmovie, container, false))
-        return mBinding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentTikmovieBinding {
+        return FragmentTikmovieBinding.inflate(inflater, container, false)
     }
 
     override fun inject() {

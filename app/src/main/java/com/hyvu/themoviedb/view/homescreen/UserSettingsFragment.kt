@@ -11,9 +11,7 @@ import com.hyvu.themoviedb.databinding.FragmentUserSettingsBinding
 import com.hyvu.themoviedb.view.loginscreen.LoginActivity
 import com.hyvu.themoviedb.view.base.BaseFragment
 
-class UserSettingsFragment : BaseFragment() {
-
-    private lateinit var mBinding: FragmentUserSettingsBinding
+class UserSettingsFragment : BaseFragment<FragmentUserSettingsBinding>() {
 
     override fun inject() {
         (activity as MainActivity).mainComponent.inject(this)
@@ -67,13 +65,11 @@ class UserSettingsFragment : BaseFragment() {
     override fun observerLiveData() {
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val v = inflater.inflate(R.layout.fragment_user_settings, container, false)
-        mBinding = FragmentUserSettingsBinding.bind(v)
-        return mBinding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentUserSettingsBinding {
+        return FragmentUserSettingsBinding.inflate(layoutInflater, container, false)
     }
 
 }

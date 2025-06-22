@@ -13,7 +13,7 @@ import com.hyvu.themoviedb.databinding.ActivityMovieImageBinding
 import com.hyvu.themoviedb.di.MovieImageComponent
 import com.hyvu.themoviedb.view.base.BaseActivity
 
-class MovieImageActivity : BaseActivity() {
+class MovieImageActivity : BaseActivity<ActivityMovieImageBinding>() {
 
     companion object {
         const val ARG_BACKDROPS = "ARG_BACKDROP"
@@ -22,7 +22,6 @@ class MovieImageActivity : BaseActivity() {
 
     private var listImages: List<Backdrop> = ArrayList()
     private var selectedImage = 0
-    private lateinit var mBinding: ActivityMovieImageBinding
     lateinit var movieMovieImageComponent: MovieImageComponent
 
     override fun getBundle() {
@@ -39,9 +38,8 @@ class MovieImageActivity : BaseActivity() {
         movieMovieImageComponent.inject(this)
     }
 
-    override fun getLayoutId(): View {
-        mBinding = ActivityMovieImageBinding.inflate(layoutInflater)
-        return mBinding.root
+    override fun getViewBinding(): ActivityMovieImageBinding {
+        return ActivityMovieImageBinding.inflate(layoutInflater)
     }
 
     override fun initView() {

@@ -9,9 +9,7 @@ import com.hyvu.themoviedb.view.base.BaseActivity
 import com.hyvu.themoviedb.view.homescreen.MainActivity
 import com.hyvu.themoviedb.view.loginscreen.LoginActivity
 
-class SplashActivity : BaseActivity() {
-
-    private lateinit var mBinding: ActivitySplashBinding
+class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     override fun getBundle() {
     }
@@ -22,9 +20,8 @@ class SplashActivity : BaseActivity() {
     override fun inject() {
     }
 
-    override fun getLayoutId(): View {
-        mBinding = ActivitySplashBinding.inflate(layoutInflater)
-        return mBinding.root
+    override fun getViewBinding(): ActivitySplashBinding {
+        return ActivitySplashBinding.inflate(layoutInflater)
     }
 
     override fun initView() {

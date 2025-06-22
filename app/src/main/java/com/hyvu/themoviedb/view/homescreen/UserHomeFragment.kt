@@ -18,7 +18,7 @@ import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class UserHomeFragment: BaseFragment() {
+class UserHomeFragment: BaseFragment<FragmentUserHomeBinding>() {
 
     @Inject
     lateinit var providerFactory: MainViewModelFactory
@@ -30,7 +30,6 @@ class UserHomeFragment: BaseFragment() {
         ViewModelProvider(requireActivity(), providerFactory)[SharedViewModel::class.java]
     }
 
-    private lateinit var mBinding: FragmentUserHomeBinding
     private var adapterCategoryMovie: UserCategoryAdapter? = null
     val mapMovies: LinkedHashMap<Genre, List<MovieDetail>> = LinkedHashMap()
 
@@ -66,11 +65,11 @@ class UserHomeFragment: BaseFragment() {
         })
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        val v = inflater.inflate(R.layout.fragment_user_home, container, false)
-        mBinding = FragmentUserHomeBinding.bind(v)
-        return mBinding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentUserHomeBinding {
+        return FragmentUserHomeBinding.inflate(layoutInflater, container, false)
     }
 
     private val userCategoryAdapterListener = object : UserCategoryAdapter.Listener {

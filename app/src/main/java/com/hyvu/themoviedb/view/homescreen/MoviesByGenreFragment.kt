@@ -20,7 +20,7 @@ import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class MoviesByGenreFragment : BaseFragment() {
+class MoviesByGenreFragment : BaseFragment<FragmentMoviesByGenreBinding>() {
 
     companion object {
         const val ARG_GENRE = "ARG_GENRE_ID"
@@ -43,21 +43,18 @@ class MoviesByGenreFragment : BaseFragment() {
     }
 
     private lateinit var genre: Genre
-    private lateinit var mBinding: FragmentMoviesByGenreBinding
     private var moviePagingDataAdapter: MoviesPagingDataAdapter? = null
     private var movieGridAdapter: MovieGridAdapter? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val v = inflater.inflate(R.layout.fragment_movies_by_genre, container, false)
-        mBinding = FragmentMoviesByGenreBinding.bind(v)
-        return mBinding.root
-    }
-
     override fun inject() {
         (activity as MainActivity).mainComponent.inject(this)
+    }
+
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMoviesByGenreBinding {
+        return FragmentMoviesByGenreBinding.inflate(inflater, container, false)
     }
 
     override fun getBundle() {

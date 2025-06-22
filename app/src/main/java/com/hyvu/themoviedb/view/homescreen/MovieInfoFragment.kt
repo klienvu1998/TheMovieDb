@@ -1,6 +1,5 @@
 package com.hyvu.themoviedb.view.homescreen
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,26 +9,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.hyvu.themoviedb.R
-import com.hyvu.themoviedb.view.homescreen.adapter.GenresAdapter
-import com.hyvu.themoviedb.view.homescreen.adapter.ViewPagerInfoAdapter
 import com.hyvu.themoviedb.data.remote.api.BASE_IMG_LOW_QUALITY_URL
 import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.data.remote.entity.MovieFullDetails
 import com.hyvu.themoviedb.databinding.FragmentMovieInfoBinding
 import com.hyvu.themoviedb.utils.Utils
 import com.hyvu.themoviedb.view.base.BaseFragment
+import com.hyvu.themoviedb.view.homescreen.adapter.GenresAdapter
+import com.hyvu.themoviedb.view.homescreen.adapter.ViewPagerInfoAdapter
+import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.hyvu.themoviedb.viewmodel.home.MovieInfoViewModel
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
-import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class MovieInfoFragment: BaseFragment() {
+class MovieInfoFragment: BaseFragment<FragmentMovieInfoBinding>() {
     @Inject
     lateinit var providerFactory: MainViewModelFactory
 
     private lateinit var movieDetail: MovieDetail
-    private lateinit var mBinding: FragmentMovieInfoBinding
     private val mViewModel by lazy {
         ViewModelProvider(this, providerFactory).get(MovieInfoViewModel::class.java)
     }
@@ -38,10 +36,11 @@ class MovieInfoFragment: BaseFragment() {
     }
     private lateinit var viewPagerDetailMainAdapter: ViewPagerInfoAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        val v = inflater.inflate(R.layout.fragment_movie_info, container, false)
-        mBinding = FragmentMovieInfoBinding.bind(v)
-        return mBinding.root
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentMovieInfoBinding {
+        return FragmentMovieInfoBinding.inflate(inflater, container, false)
     }
 
     override fun inject() {

@@ -20,7 +20,6 @@ import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerFullScreenListener
 import javax.inject.Inject
 
 
@@ -125,11 +124,11 @@ class MainActivity : BaseActivity() {
     }
 
     fun isShowControllerYoutube(isShow: Boolean) {
-        mBinding.youtubeView.getPlayerUiController().apply {
-            showUi(isShow)
-            showVideoTitle(isShow)
-            showFullscreenButton(false)
-        }
+//        mBinding.youtubeView.getPlayerUiController().apply {
+//            showUi(isShow)
+//            showVideoTitle(isShow)
+//            showFullscreenButton(false)
+//        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -147,16 +146,6 @@ class MainActivity : BaseActivity() {
                     }
                 })
             }
-        })
-        mBinding.youtubeView.addFullScreenListener(object : YouTubePlayerFullScreenListener {
-            override fun onYouTubePlayerEnterFullScreen() {
-                mBinding.motionLayout.transitionToState(R.id.ytb_fullscreen)
-            }
-
-            override fun onYouTubePlayerExitFullScreen() {
-                mBinding.motionLayout.transitionToState(R.id.show)
-            }
-
         })
     }
 

@@ -177,23 +177,23 @@ class LoginActivity : BaseActivity() {
         mAnimationSet = AnimatorSet()
         val fadeOut = ObjectAnimator.ofFloat(fadeOutTarget, View.ALPHA, 1f, 0f)
         fadeOut.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {}
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
                 fadeOutTarget.visibility = View.GONE
             }
-            override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationRepeat(animation: Animator?) {}
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
         })
         fadeOut.interpolator = LinearInterpolator()
 
         val fadeIn = ObjectAnimator.ofFloat(fadeInTarget, View.ALPHA, 0f, 1f)
         fadeIn.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 fadeInTarget.visibility = View.VISIBLE
             }
-            override fun onAnimationEnd(animation: Animator?) {}
-            override fun onAnimationCancel(animation: Animator?) {}
-            override fun onAnimationRepeat(animation: Animator?) {}
+            override fun onAnimationEnd(animation: Animator) {}
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationRepeat(animation: Animator) {}
         })
         fadeIn.interpolator = LinearInterpolator()
         mAnimationSet?.duration = duration

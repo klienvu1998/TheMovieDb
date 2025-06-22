@@ -1,56 +1,98 @@
 package com.hyvu.themoviedb.viewmodel.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hyvu.themoviedb.R
 import com.hyvu.themoviedb.data.remote.api.TheMovieDbAPI
-import com.hyvu.themoviedb.data.remote.entity.AuthenticateToken
-import com.hyvu.themoviedb.data.remote.entity.Session
-import com.hyvu.themoviedb.data.repository.LoginRepository
+import com.hyvu.themoviedb.data.remote.entity.RequestTokenResponse
+import com.hyvu.themoviedb.data.repository.AuthenticateRepository
 import com.hyvu.themoviedb.data.local.database.HomeDatabase
+import com.hyvu.themoviedb.data.local.entity.RequestToken
+import com.hyvu.themoviedb.di.scope.ActivityScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(private val loginRepository: LoginRepository): ViewModel() {
-    private val compositeDisposable = CompositeDisposable()
+@ActivityScope
+class LoginViewModel @Inject constructor(private val authenticateRepository: AuthenticateRepository): ViewModel() {
 
-    @Inject
-    lateinit var apiService: TheMovieDbAPI
+    companion object {
+        private const val TAG = "LoginViewModel"
+    }
+
+    private val compositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var database: HomeDatabase
 
-    private val _authenticateToken: MutableLiveData<AuthenticateToken> = MutableLiveData()
-    val authenticateToken: LiveData<AuthenticateToken> = _authenticateToken
-    private val _session: MutableLiveData<Session> = MutableLiveData()
-    val session: LiveData<Session> = _session
+    private val _viewEvent: MutableSharedFlow<LoginViewEvent> = MutableSharedFlow()
+    val viewEvent: SharedFlow<LoginViewEvent>
+        get() = _viewEvent
 
-    fun fetchAuthenticateToken() {
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
+    fun createGuestSession() {
+        _isLoading.postValue(true)
+
         compositeDisposable.add(
-            apiService.getAuthenticateToken()
-                .subscribeOn(Schedulers.io())
+            authenticateRepository.createGuestSession()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    _authenticateToken.postValue(it)
+                .subscribe({ session ->
+                    _isLoading.postValue(false)
+                    sendEvent(LoginViewEvent.ShowHomeScreen)
                 }, { e ->
-                    e.printStackTrace()
+                    Log.e(TAG, e.message.toString())
+                    _isLoading.postValue(false)
+                    sendEvent(LoginViewEvent.ShowToast(R.string.normal_error))
                 })
         )
     }
 
-    fun fetchSession(authenticateToken: String) {
-        val body = HashMap<String, Any>()
-        body["request_token"] = authenticateToken
+    fun sendEvent(event: LoginViewEvent) {
+        viewModelScope.launch {
+            _viewEvent.emit(event)
+        }
+    }
+
+    fun createAuthenticateToken() {
+        _isLoading.postValue(true)
+
         compositeDisposable.add(
-            apiService.getSessionID(body)
+            authenticateRepository.createRequestToken()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    _session.postValue(it)
+                    _isLoading.postValue(false)
+                    sendEvent(LoginViewEvent.ShowWebLogin(it))
                 }, { e ->
-                    e.printStackTrace()
+                    _isLoading.postValue(false)
+                    sendEvent(LoginViewEvent.ShowToast(R.string.normal_error))
+                })
+        )
+    }
+
+    fun createUserSession(authenticateToken: String) {
+        _isLoading.postValue(true)
+
+        compositeDisposable.add(
+            authenticateRepository.createUserSession(authenticateToken)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    _isLoading.postValue(false)
+                    sendEvent(LoginViewEvent.ShowHomeScreen)
+                }, { e ->
+                    _isLoading.postValue(false)
+                    sendEvent(LoginViewEvent.ShowToast(R.string.normal_error))
                 })
         )
     }
@@ -60,4 +102,10 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
         compositeDisposable.clear()
     }
 
+}
+
+sealed class LoginViewEvent {
+    data object ShowHomeScreen: LoginViewEvent()
+    data class ShowToast(val stringId: Int): LoginViewEvent()
+    data class ShowWebLogin(val authenticateToken: RequestToken): LoginViewEvent()
 }

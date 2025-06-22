@@ -1,6 +1,6 @@
 package com.hyvu.themoviedb.data.remote.api
 
-import com.hyvu.themoviedb.data.remote.entity.AuthenticateToken
+import com.hyvu.themoviedb.data.remote.entity.RequestTokenResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,8 +18,8 @@ const val BASE_IMG_HIGH_QUALITY_URL = "https://image.tmdb.org/t/p/w1280"
 
 object TheMovieDbClient {
 
-    fun getAuthenticateDeepLink(authenticateToken: AuthenticateToken): String {
-        return BASE_LOGIN_URL + authenticateToken.requestToken + "?redirect_to=moviebase://auth/v3"
+    fun getAuthenticateDeepLink(authenticateToken: String): String {
+        return "$BASE_LOGIN_URL$authenticateToken?redirect_to=moviebase://auth/v3"
     }
 
     fun getClient(): TheMovieDbAPI {

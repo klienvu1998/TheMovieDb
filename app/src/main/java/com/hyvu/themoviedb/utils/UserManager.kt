@@ -6,9 +6,15 @@ import javax.inject.Singleton
 @Singleton
 class UserManager @Inject constructor(private val storage: Storage) {
 
+    companion object {
+        const val DEFAULT_GUEST_ID = -150598
+    }
+
     var accountId: Int? = null
+
     val sessionId: String
         get() = storage.getString(SharedPreferenceData.SESSION_ID)
+
     val isNightMode: Boolean
         get() = storage.getBoolean(SharedPreferenceData.IS_NIGHT_MODE)
 

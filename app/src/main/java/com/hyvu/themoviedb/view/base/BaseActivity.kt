@@ -67,9 +67,9 @@ abstract class BaseActivity<T: ViewBinding>: AppCompatActivity() {
         _binding = getViewBinding()
         setContentView(mBinding.root)
         getBundle()
+        observerLiveData()
         fetchData()
         initView()
-        observerLiveData()
     }
 
     abstract fun getViewBinding(): T

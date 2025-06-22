@@ -8,12 +8,15 @@ import retrofit2.http.*
 interface TheMovieDbAPI {
 
     @GET("authentication/token/new")
-    fun getAuthenticateToken(): Single<AuthenticateToken>
+    fun createRequestToken(): Single<RequestTokenResponse>
 
     @POST("authentication/session/new")
-    fun getSessionID(
+    fun createUserSession(
         @Body body: HashMap<String, Any>
-    ): Single<Session>
+    ): Single<UserSessionResponse>
+
+    @GET("authentication/guest_session/new")
+    fun createGuestSession(): Single<GuestSessionResponse>
 
     @GET("movie/popular")
     fun getPopularMovie(

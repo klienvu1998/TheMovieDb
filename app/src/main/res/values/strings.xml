@@ -17,4 +17,6 @@
     <string name="sign_in_now_to_favorite_create_watchlist_on_videos">Sign in now to favorite, create watchlist on Videos</string>
     <string name="checking_your_network">Checking Your Network</string>
     <string name="start_with_guest">Start with Guest</string>
+    <string name="normal_error">Try again later!</string>
+    <string name="expire_session">Expired session</string>
 </resources>

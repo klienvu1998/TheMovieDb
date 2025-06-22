@@ -1,34 +1,106 @@
-# Gradle files
-.gradle/
+
+# Built application files
+*.apk
+*.ap_
+*.aab
+*.aar
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
 build/
-app/build/
-
-# Local configuration file (sdk path, etc)
-local.properties
-
-# Log/OS Files
-*.log
-
-# Android Studio generated files and folders
+.gradle/
+.idea/
 captures/
 .externalNativeBuild/
 .cxx/
-*.apk
-output.json
+local.properties
+.DS_Store
+.tooling/
+.settings/
 
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
+# Local configuration file (specific to your machine)
+local.properties
+
+# AVD snapshot files
+*.avd/*.ini.backup
+*.avd/*.log
 
 # Keystore files
-*.jks
 *.keystore
+debug.keystore
 
-# Google Services (e.g. APIs or Firebase)
+# Android Studio artifacts
+.gradle/
+.idea/
+gradle-wrapper/gradle-wrapper.properties.temp
+gradlew.bat
+gradlew
+gradle-wrapper.jar
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries/
+.project
+.classpath
+.externalToolBuilders/
+.settings/
+*.iws
+*.iml
+*.ipr
+*.bak
+
+# macOS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows specific files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Crashlytics/Fabric
+crashlytics-build.properties
+
+# Google Services
 google-services.json
 
-# Android Profiling
-*.hprof
+# If you use NDK
+obj/
+libs/armeabi/
+libs/armeabi-v7a/
+libs/arm64-v8a/
+libs/x86/
+libs/x86_64/
+libs/mips/
+libs/mips64/
+
+# Kotlin specific
+*.kotlin_module
+.idea/caches/build_file_checksums.ser
+
+# Test report files
+**/test-results/
+**/test-output/
+
+# Gradle debug files
+gradle-build/
+
+# Android Studio Preview and Layout Editor cache
+.idea/inspectionProfiles/
+.idea/configurations/
+.idea/modules.xml
+.idea/copyright/
+.idea/runConfigurations/

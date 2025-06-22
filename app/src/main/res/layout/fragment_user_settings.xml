@@ -7,55 +7,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_weight="2"
-    tools:context=".view.homescreen.UserSettingsFragment">
+    tools:context=".view.homescreen.SettingsFragment">
 
     <include layout="@layout/layout_tool_bar"
         android:id="@+id/tool_bar_container"/>
-
-    <LinearLayout
-        android:id="@+id/sign_in_suggest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="30dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:src="@drawable/bg_login" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Do more with TheMovieDB"
-            android:textColor="?attr/colorSecondary"
-            android:textSize="15sp"
-            android:gravity="center"
-            android:layout_marginTop="20dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="50dp"
-            android:textSize="12sp"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:text="@string/sign_in_now_to_favorite_create_watchlist_on_videos"/>
-
-        <TextView
-            android:id="@+id/btn_sign_in"
-            android:layout_width="@dimen/btn_width"
-            android:layout_height="@dimen/btn_height"
-            android:text="SIGN IN"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:textColor="?attr/colorPrimary"
-            android:background="@drawable/color_green_to_blue"
-            android:gravity="center"
-            android:layout_marginTop="10dp"/>
-
-    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -96,37 +51,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/logged_in_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/btn_user_sign_out"
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="10dp"
-            android:layout_height="50dp">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_logout"
-                app:tint="?attr/colorSecondary" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sign_out"
-                android:layout_marginStart="10dp"
-                android:textSize="15sp"
-                android:textColor="?attr/colorSecondary" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/btn_sign_out"
+        android:layout_width="@dimen/btn_width"
+        android:layout_height="@dimen/btn_height"
+        android:text="SIGN OUT"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        android:textColor="?attr/colorPrimary"
+        android:background="@color/red"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"/>
 
 </LinearLayout>

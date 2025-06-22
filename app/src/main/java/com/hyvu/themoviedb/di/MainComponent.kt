@@ -2,7 +2,7 @@ package com.hyvu.themoviedb.di
 
 import com.hyvu.themoviedb.di.module.MainViewModelModule
 import com.hyvu.themoviedb.di.scope.ActivityScope
-import com.hyvu.themoviedb.view.homescreen.UserSettingsFragment
+import com.hyvu.themoviedb.view.homescreen.SettingsFragment
 import com.hyvu.themoviedb.view.homescreen.*
 import dagger.Subcomponent
 
@@ -25,6 +25,7 @@ interface MainComponent {
     fun inject(fragment: HomeFragment)
     fun inject(fragment: TikMovieFragment)
     fun inject(fragment: UserFragment)
-    fun inject(fragment: UserSettingsFragment)
+    fun inject(fragment: SettingsFragment)
     fun inject(fragment: UserHomeFragment)
+    fun inject(fragment: RemindLoginFragment)
 }

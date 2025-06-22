@@ -68,7 +68,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private fun initUserSettings() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.user_fragment_container, UserSettingsFragment())
+            .replace(R.id.user_fragment_container, SettingsFragment())
             .commit()
     }
 

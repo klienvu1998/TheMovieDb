@@ -1,34 +1,24 @@
 package com.hyvu.themoviedb.view.homescreen
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hyvu.themoviedb.R
-import com.hyvu.themoviedb.view.homescreen.adapter.UserCategoryAdapter
 import com.hyvu.themoviedb.data.remote.entity.Genre
 import com.hyvu.themoviedb.data.remote.entity.MovieDetail
 import com.hyvu.themoviedb.databinding.FragmentUserHomeBinding
 import com.hyvu.themoviedb.view.base.BaseFragment
+import com.hyvu.themoviedb.view.homescreen.adapter.UserCategoryAdapter
 import com.hyvu.themoviedb.viewmodel.home.SharedViewModel
 import com.hyvu.themoviedb.viewmodel.home.UserViewModel
-import com.hyvu.themoviedb.viewmodel.factory.MainViewModelFactory
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class UserHomeFragment: BaseFragment<FragmentUserHomeBinding>() {
 
-    @Inject
-    lateinit var providerFactory: MainViewModelFactory
-    private val mViewModel by lazy {
-        ViewModelProvider(this, providerFactory)[UserViewModel::class.java]
-    }
-
-    private val mSharedViewModel by lazy {
-        ViewModelProvider(requireActivity(), providerFactory)[SharedViewModel::class.java]
-    }
+    @Inject lateinit var mViewModel: UserViewModel
+    @Inject lateinit var mSharedViewModel: SharedViewModel
 
     private var adapterCategoryMovie: UserCategoryAdapter? = null
     val mapMovies: LinkedHashMap<Genre, List<MovieDetail>> = LinkedHashMap()
